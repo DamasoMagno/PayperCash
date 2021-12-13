@@ -1,11 +1,13 @@
-import { Field } from "../../components/Field";
+import { useState } from "react";
 import { useModals } from '../../contexts/modalsContext';
+
+import { Field } from "../../components/Field";
+import { SideBar } from "../../components/SideBar";
 import { FinishedModalOcurrency } from "../../components/Modals/FinishedOcurrencyModal";
 
-import { Container, Buttons, Divider} from "./styles";
+import { Container, Buttons, Divider, Content} from "./styles";
 
 import localizationImage from "../../assets/localization.png";
-import { useState } from "react";
 
 export function Ocurrency(){
   const { onSetModalFinishedOcurrencyIsOpen } = useModals();
@@ -15,6 +17,8 @@ export function Ocurrency(){
 
   return (
     <Container>
+    <SideBar />
+    <Content>
       <small>Detalhes do chamado</small>
       <strong>Notebook na sala de gerencias não está ligando</strong>
       <p>Chamado aberto em 09 de janeiro de 2021 as 15:30</p>
@@ -55,6 +59,7 @@ export function Ocurrency(){
     <FinishedModalOcurrency 
       setResolution={setResolution}  
     />
+    </Content>
     </Container>
   );
 }

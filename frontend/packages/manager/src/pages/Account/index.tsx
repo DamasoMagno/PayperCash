@@ -21,8 +21,8 @@ type User = {
 export function UserProfile(){
   const { register } = useForm<User>();
 
-  const { data: user } = useQuery<User>("user", async () => {
-    const response = await api.get("user");
+  const { data: user } = useQuery<User>("manager", async () => {
+    const response = await api.get("manager");
     return response.data;
   });
 

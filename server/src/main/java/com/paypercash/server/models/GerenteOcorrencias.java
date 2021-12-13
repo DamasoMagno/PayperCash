@@ -21,14 +21,6 @@ public class GerenteOcorrencias {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "empresa_id")
-  @JsonIgnore
-  private Empresa empresa;
-
-  @OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL)
-  private List<Ocorrencia> ocorrencias;
-
   private String nome;
 
   private String email;
@@ -36,6 +28,14 @@ public class GerenteOcorrencias {
   private String senha;
 
   private String endereco;
+
+  @OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL)
+  private List<Ocorrencia> ocorrencias;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "empresa_id")
+  @JsonIgnore
+  private Empresa empresa;
 
   public Long getId() {
     return this.id;

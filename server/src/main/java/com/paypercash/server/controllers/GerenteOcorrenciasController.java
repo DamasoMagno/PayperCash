@@ -47,7 +47,20 @@ public class GerenteOcorrenciasController {
   }
 
   @PutMapping("/{id}")
-  public void atualizarDados( @RequestBody GerenteOcorrencias gerenteOcorrencias){}
+  public ResponseEntity<?> atualizarDados( @RequestBody GerenteOcorrencias gerenteOcorrencias, @PathVariable Long id){
+    GerenteOcorrencias gerente = gerenteOcorrenciasRepository.findById(id).get();
+
+    if(gerente == null){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gerente nao encontrado");
+    }
+
+    gerente.setEmail(gerenteOcorrencias.getEmail());
+    gerente.setEndereco(gerenteOcorrencias.getEndereco());
+    gerente.setNome(gerenteOcorrencias.getNome());
+
+    gerenteOcorrenciasRepository.save(gerente);
+    return ResponseEntity.status(HttpStatus.GONE).body(gerente);
+  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> apagarGerente(@PathVariable Long id){

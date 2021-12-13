@@ -2,23 +2,27 @@ import { Link } from "react-router-dom";
 import {  MdArrowLeft, MdMail, MdHome, MdPlace, MdContactPhone, MdLock, MdPhone } from "react-icons/md";
 
 import { Container, Background, Form } from "./styles";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Form/Button";
 import { Input } from "../../components/Form/Input";
 
 type Inputs = {
-  name: string;
+  nome: string;
   email: string;
-  password: string;
-  address: string;
-  contact: string;
+  senha: string;
+  endereco: string;
+  contato: string;
 }
 
 export function SignUp(){
-  const { register } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm<Inputs>();
 
   const [ step, setStep ] = useState(1);
+
+  function IsHere(){
+    console.log(register);
+  }
 
   return (
     <div>
@@ -31,7 +35,7 @@ export function SignUp(){
               <>
                 <Input 
                   icon={MdHome}
-                  register={() => register("name")}
+                  register={() => register("nome")}
                   placeholder="Unidade"
                 />
                 <Input 
@@ -41,7 +45,7 @@ export function SignUp(){
                 />
                 <Input 
                   icon={MdLock} 
-                  register={() => register("password")}
+                  register={() => register("senha")}
                   placeholder="Senha"
                   isPassword
                 />
@@ -58,12 +62,12 @@ export function SignUp(){
               <>
                 <Input 
                   icon={MdPlace} 
-                  register={() => register("address")}
+                  register={() => register("endereco")}
                   placeholder="Endereço"
                 />
                 <Input 
                   icon={MdPhone}
-                  register={() => register("contact")}
+                  register={() => register("contato")}
                   placeholder="Contato"
                 />
                 <Button 

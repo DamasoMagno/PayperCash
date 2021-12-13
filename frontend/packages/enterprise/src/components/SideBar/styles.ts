@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.aside`
-  max-width: 14rem;
+  max-width: 15rem;
   width: 100%;
   min-height: 100vh;
   background: var(--background);
@@ -38,7 +38,7 @@ export const Container = styled.aside`
 export const User = styled.div`
   padding-left: 1rem;
 
-  button {
+  > a {
     background-color: transparent;
     display: flex;
     justify-content: center;

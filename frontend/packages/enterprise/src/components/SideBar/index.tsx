@@ -14,9 +14,9 @@ export function SideBar(){
   return (
     <Container>
       <User>
-        <button>
+        <Link to="/">
           <FiLogOut color="#FFF" size={20}/>
-        </button>
+        </Link>
 
         <div className="profile">
           <img src={userProfileImage} alt="User Image" onClick={() => onSetModalEnterpriseIsOpen(true)}/>
@@ -30,7 +30,7 @@ export function SideBar(){
         </li>
 
         <li className={ pathname === "/" ? "active" : ""}>
-          <Link to="/">Pendentes</Link>
+          <Link to="/dashboard">Pendentes</Link>
         </li>
 
         <li className={ pathname === "/ocurrencyManagers" ? "active" : ""}>

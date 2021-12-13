@@ -9,7 +9,7 @@ export const Container = styled.div`
   display: flex;
 `;
 
-export const Form = styled.form`
+export const Form = styled.div`
   width: 100%;
   max-width: 720px;
 
@@ -60,7 +60,6 @@ export const Form = styled.form`
 
 export const Background = styled.section`
   flex: 1;
-
   background: url(${backgroundImage}) no-repeat;
   background-size: cover;
 `; 

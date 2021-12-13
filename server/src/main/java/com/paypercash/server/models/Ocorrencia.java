@@ -20,13 +20,9 @@ public class Ocorrencia {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "gerente_ocorrencias_id")
+  @JoinColumn(name = "gerente_ocorrencia_id")
   @JsonIgnore
   private GerenteOcorrencias gerenteOcorrencias;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "tecnico_id")
-  private Tecnico tecnico;
   
   private String titulo;
 
@@ -93,14 +89,4 @@ public class Ocorrencia {
   public void setGerenteOcorrencias(GerenteOcorrencias gerenteOcorrencias) {
     this.gerenteOcorrencias = gerenteOcorrencias;
   }
-
-
-  public Tecnico getTecnico() {
-    return this.tecnico;
-  }
-
-  public void setTecnico(Tecnico tecnico) {
-    this.tecnico = tecnico;
-  }
-
 }

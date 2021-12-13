@@ -1,20 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MdArrowDropDown } from "react-icons/md";
 
-import { UserProfileModal } from "../../components/Modals/UserProfileModal";
+import { SideBar } from "../../components/SideBar";
 import { InputSearch } from "../../components/Forms/InputSearch";
 
-import { Container, Period, Filters, Ocurrency } from "./styles";
+import { Container, Period, Filters, Ocurrency, Content } from "./styles";
 
 import scheduleImage from "../../assets/schedule.png";
 import showOcurrencyImage from "../../assets/showOcurrency.png";
+import { api } from "../../services/api";
 
 export function Home(){
   const [ ocurrenciesByPeriod, setOcurrenciesByPeriod ] = useState();
 
+  useEffect(() => {
+    api.get("/ocurrencies")
+      .then(response => console.log(response));
+  })
+
   return (
     <Container>
+    <SideBar />
+    <Content>
       <Filters>
         <div className="filter">
           <select>
@@ -41,6 +49,8 @@ export function Home(){
           </Ocurrency>
         </Period>
       </main>
+    
+    </Content>
     </Container>
   );
 }

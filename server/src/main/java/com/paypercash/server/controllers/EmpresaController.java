@@ -37,20 +37,23 @@ public class EmpresaController {
 
   @GetMapping("/{id}")
   public ResponseEntity<?> exibirEmpresa(@PathVariable Long id){
-    Empresa empresa = empresaRepository.findById(id).get();
-
-    if(empresa == null){
+    try {
+      Empresa empresa = empresaRepository.findById(id).get();
+      return ResponseEntity.status(HttpStatus.OK).body(empresa);
+    } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-
-    return ResponseEntity.status(HttpStatus.OK).body(empresa);
   }
 
   @PostMapping
-  public ResponseEntity<Empresa> criarEmpresa(@RequestBody Empresa empresa){
+  public ResponseEntity<?> criarEmpresa(@RequestBody Empresa empresa){
     Empresa empresaCriada = empresaServices.criarEmpresa(empresa); 
 
+    try {
     return ResponseEntity.status(HttpStatus.CREATED).body(empresaCriada);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Esta empresa já existe");
+    }
   }  
 
   @DeleteMapping("/{id}")

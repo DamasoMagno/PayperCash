@@ -18,6 +18,11 @@ import callImage from "../../assets/call.png";
 export function Home() {
   const { setModalOpenCallIsOpen } = useModal();
 
+  useEffect(() => {
+    api.get("/manager")
+      .then(repsonse => console.log("Response", repsonse.data))
+  });
+
   const ocurrencies =  [
     { id: 1, hour: "8:30", title: "Notebook não está ligando", period: "Hoje" },
     { id: 2, hour: "10:25", title: "Servidor, está bloqueando o acesso aos sites", period: "Ontem" },

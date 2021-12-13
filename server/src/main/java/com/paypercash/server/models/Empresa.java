@@ -22,12 +22,6 @@ public class Empresa implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-  private List<Tecnico> tecnicos;
-
-  @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-  private List<GerenteOcorrencias> gerenteOcorrencias;
-
   private String nome; 
 
   private String email;
@@ -38,28 +32,18 @@ public class Empresa implements Serializable {
 
   private Date data_criacao;
 
+  @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+  private List<Tecnico> tecnicos;
+
+  @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+  private List<GerenteOcorrencias> gerenteOcorrencias;
+
   public Long getId() {
     return this.id;
   }
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public List<Tecnico> getTecnicos() {
-    return this.tecnicos;
-  }
-
-  public void setTecnicos(List<Tecnico> tecnicos) {
-    this.tecnicos = tecnicos;
-  }
-
-  public List<GerenteOcorrencias> getGerenteOcorrencias() {
-    return this.gerenteOcorrencias;
-  }
-
-  public void setGerenteOcorrencias(List<GerenteOcorrencias> gerenteOcorrencias) {
-    this.gerenteOcorrencias = gerenteOcorrencias;
   }
 
   public String getNome() {
@@ -101,4 +85,21 @@ public class Empresa implements Serializable {
   public void setData_criacao(Date data_criacao) {
     this.data_criacao = data_criacao;
   }
+
+    public List<Tecnico> getTecnicos() {
+    return this.tecnicos;
+  }
+
+  public void setTecnicos(List<Tecnico> tecnicos) {
+    this.tecnicos = tecnicos;
+  }
+
+  public List<GerenteOcorrencias> getGerenteOcorrencias() {
+    return this.gerenteOcorrencias;
+  }
+
+  public void setGerenteOcorrencias(List<GerenteOcorrencias> gerenteOcorrencias) {
+    this.gerenteOcorrencias = gerenteOcorrencias;
+  }
+
 }

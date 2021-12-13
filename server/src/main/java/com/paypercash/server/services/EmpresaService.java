@@ -42,7 +42,7 @@ public class EmpresaService {
     } 
 
     if(empresa.getEndereco() != null){
-      empresaEncontrada.setEndereco(empresa.getEmail());
+      empresaEncontrada.setEndereco(empresa.getEndereco());
     } 
 
     if(empresa.getNome() != null){

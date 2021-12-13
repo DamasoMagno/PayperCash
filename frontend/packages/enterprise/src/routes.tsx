@@ -10,9 +10,10 @@ import { OcurrencyManager } from "./pages/OcurrencyManager";
 export function AppRoutes(){
   return (
     <BrowserRouter>
-      <SideBar />
       <Routes>
-        <Route path="/" element={<Home />} /> 
+        <Route path="/" element={<SignIn />}/>
+        <Route path="/signUp" element={<SignUp />}/>
+        <Route path="/dashboard" element={<Home />} /> 
         <Route path="/finished" element={<Home />} />
         <Route path="/ocurrency/:id" element={<Ocurrency />} />
         <Route path="/ocurrencyManagers" element={<OcurrencyManager />} />

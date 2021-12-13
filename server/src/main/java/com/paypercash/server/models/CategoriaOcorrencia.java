@@ -4,8 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class CategoriaOcorrencia {
@@ -15,10 +13,6 @@ public class CategoriaOcorrencia {
   private Long id;
 
   private String tipo_categoria;
-
-  @ManyToOne()
-  @JoinColumn(name = "ocorrencia_id")
-  private Ocorrencia ocorrencia;
 
   public Long getId() {
     return this.id;
@@ -34,14 +28,6 @@ public class CategoriaOcorrencia {
 
   public void setTipo_categoria(String tipo_categoria) {
     this.tipo_categoria = tipo_categoria;
-  }
-
-  public Ocorrencia getOcorrencia() {
-    return this.ocorrencia;
-  }
-
-  public void setOcorrencia(Ocorrencia ocorrencia) {
-    this.ocorrencia = ocorrencia;
   }
 
 }

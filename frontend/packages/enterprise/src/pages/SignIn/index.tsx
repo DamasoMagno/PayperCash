@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 
 import { Container, Background, Form } from "./styles";
 
-import signUpImage from "../../assets/signUp.png";
 import { Button } from "../../components/Forms/Button";
 import { Input } from "../../components/Forms/Input";
+
+import signUpImage from "../../assets/signUp.png";
 
 export function SignIn(){
   const { register } = useForm();
@@ -31,7 +32,7 @@ export function SignIn(){
             <Button title="Login" />
           </form>
 
-          <Link to="signUp">
+          <Link to="/signUp">
             <img src={signUpImage} alt="Criar Conta" />
             Criar Conta
           </Link>

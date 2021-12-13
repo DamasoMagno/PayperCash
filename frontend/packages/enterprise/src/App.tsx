@@ -1,13 +1,15 @@
+import { UserProfileModal } from "./components/Modals/UserProfileModal";
 import { AppContext } from "./contexts/modalsContext";
-import { Dashboard } from "./pages/Dashboard";
+import { AppRoutes } from "./routes";
 
 import GlobalStyles from "./styles/global";
 
 export function App() {
   return (
     <AppContext>
-        <Dashboard />
-        <GlobalStyles />
+      <AppRoutes />
+      <GlobalStyles />
+      <UserProfileModal/>
     </AppContext>
   );
 }

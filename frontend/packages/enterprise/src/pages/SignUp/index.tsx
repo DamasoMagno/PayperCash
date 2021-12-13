@@ -1,22 +1,42 @@
-import { Link } from "react-router-dom";
-import {  MdArrowLeft, MdMail, MdHome, MdPlace, MdContactPhone, MdLock, MdPhone } from "react-icons/md";
-
-import { Container, Background, Form } from "./styles";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link, Router } from "react-router-dom";
+import {  MdArrowLeft, MdMail, MdHome, MdPlace, MdLock, MdPhone } from "react-icons/md";
+
 import { Button } from "../../components/Forms/Button";
 import { Input } from "../../components/Forms/Input";
 
+import { Container, Background, Form } from "./styles";
+import { api } from "../../services/api";
+
 type Inputs = {
-  name: string;
+  nome: string;
   email: string;
-  password: string;
-  address: string;
-  contact: string;
+  senha: string;
+  endereco: string;
 }
 
 export function SignUp(){
-  const { register } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm<Inputs>();
+
+  async function handleSubmitUser(data: any){
+
+    const enterprise = {
+      nome: data.nome,
+      email: data.email,
+      senha: data.senha,
+      endereco: data.endereco,
+      data_criacao: new Date()
+    }
+
+    try {
+      const response = await api.post("/enterprises", enterprise);
+      location.href = "/dashboard"
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
   const [ step, setStep ] = useState(1);
 
@@ -25,58 +45,33 @@ export function SignUp(){
       <Container>
         <Background />    
         <Form>
-          <form>
+          <form onSubmit={handleSubmit(handleSubmitUser)}>
             <h2>Cadastrar</h2>
-            { step === 1 ? (
-              <>
-                <Input 
-                  icon={MdHome}
-                  register={() => register("name")}
-                  placeholder="Unidade"
-                />
-                <Input 
-                  icon={MdMail} 
-                  register={() => register("email")}
-                  placeholder="Email"
-                />
-                <Input 
-                  icon={MdLock} 
-                  register={() => register("password")}
-                  placeholder="Senha"
-                  isPassword
-                />
-                <Button 
-                  title="Próximo" 
-                  type="button" 
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setStep(2)
-                  }}
-                />
-              </>
-            ) : (
-              <>
-                <Input 
-                  icon={MdPlace} 
-                  register={() => register("address")}
-                  placeholder="Endereço"
-                />
-                <Input 
-                  icon={MdPhone}
-                  register={() => register("contact")}
-                  placeholder="Contato"
-                />
-                <Button 
-                  title="Passo Anterior" 
-                  onClick={() => setStep(1)} 
-                  type="button"
-                />
-                <Button title="Cadastrar"/>
-              </>
-            )}
+            <Input 
+              icon={MdHome}
+              register={() => register("nome")}
+              placeholder="Unidade"
+            />
+            <Input 
+              icon={MdMail} 
+              register={() => register("email")}
+              placeholder="Email"
+            />
+            <Input 
+              icon={MdLock} 
+              register={() => register("senha")}
+              placeholder="Senha"
+              isPassword
+            />
+            <Input 
+              icon={MdPlace} 
+              register={() => register("endereco")}
+              placeholder="Endereço"
+            />
+            <Button title="Cadastrar" />
           </form>
 
-          <Link to="/signIn">
+          <Link to="/">
             <MdArrowLeft color="#FFF"/> Fazer Login
           </Link>
         </Form>

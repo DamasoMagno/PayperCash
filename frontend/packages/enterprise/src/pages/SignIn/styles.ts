@@ -3,9 +3,8 @@ import styled from "styled-components";
 import backgroundImage from "../../assets/Background.png";
 
 export const Container = styled.div`
-  background: var(--heading);
+  background: var(--background);
   height: 100vh;
-
   display: flex;
 `;
 
