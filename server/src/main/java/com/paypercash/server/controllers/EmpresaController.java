@@ -47,28 +47,32 @@ public class EmpresaController {
 
   @PostMapping
   public ResponseEntity<?> criarEmpresa(@RequestBody Empresa empresa){
-    Empresa empresaCriada = empresaServices.criarEmpresa(empresa); 
-
     try {
-    return ResponseEntity.status(HttpStatus.CREATED).body(empresaCriada);
+      Empresa empresaCriada = empresaServices.criarEmpresa(empresa); 
+      return ResponseEntity.status(HttpStatus.CREATED).body(empresaCriada);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Esta empresa já existe");
     }
   }  
 
   @DeleteMapping("/{id}")
-  public void apagarEmpresa(@PathVariable Long id){
-    empresaRepository.deleteById(id);
+  public ResponseEntity<?> apagarEmpresa(@PathVariable Long id){
+    try {
+      empresaRepository.deleteById(id);
+      return ResponseEntity.status(HttpStatus.GONE).body(null);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Esta empresa, não foi enocntrada");
+    }
   }
 
   @PutMapping("/{id}")
-  public Empresa atualizarEmpresa(@RequestBody Empresa empresa, @PathVariable Long id){
-    System.out.print(id);
-
-    Empresa empresaAlterada = empresaServices.atualizarEmpresaDados(empresa, id);
-
-    empresaRepository.save(empresaAlterada);
-
-    return empresaAlterada;
+  public ResponseEntity<?> atualizarEmpresa(@RequestBody Empresa empresa, @PathVariable Long id){
+    try {
+      Empresa empresaAlterada = empresaServices.atualizarEmpresaDados(empresa, id);
+      empresaRepository.save(empresaAlterada);
+      return ResponseEntity.status(HttpStatus.CREATED).body(empresaAlterada);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Não foi possivel, atualizar os dados");
+    }
   }
 }

@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class GerenteOcorrencias {
-
+  
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -88,9 +88,4 @@ public class GerenteOcorrencias {
   public List<Ocorrencia> getOcorrencias() {
     return this.ocorrencias;
   }
-
-  public void setOcorrencias(List<Ocorrencia> ocorrencias) {
-    this.ocorrencias = ocorrencias;
-  }
-
 }

@@ -9,29 +9,7 @@ export const Container = styled.aside`
   padding-top: 1rem;
 
   nav {
-    margin-top: 3rem;   
-
-    li {
-      list-style: none;
-      cursor: pointer;
-      padding: 1rem 1rem;
-      margin: .25rem 0;
-      transition: .2s background;
-      
-      &:hover, &.active {
-        background: #eee;
-        border-radius: .10rem;
-        
-        a {
-          color: #333333;
-        } 
-      }
-
-      a {
-        color: #FFF;
-        font-size: 1.15rem;
-      }
-    }
+    margin-top: 3rem;
   }
 `;
 
@@ -39,21 +17,16 @@ export const User = styled.div`
   padding-left: 1rem;
 
   > a {
-    background-color: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
     svg {
-      opacity: .5;
-      transition: .2s opacity;
+      opacity: 0.5;
+      transition: 0.2s opacity;
 
       &:hover {
-       opacity: .85;
+        opacity: 0.85;
       }
     }
   }
-  
+
   div.profile {
     margin-top: 1rem;
     display: flex;
@@ -62,17 +35,17 @@ export const User = styled.div`
     img {
       width: 64px;
       border-radius: 50%;
-      margin-right: .5rem;
+      margin-right: 0.5rem;
       cursor: pointer;
-      transition: filter .5s;
+      transition: filter 0.5s;
 
       &:hover {
-        filter: brightness(.8);
+        filter: brightness(0.8);
       }
     }
 
     span {
-      color: #FFF;
+      color: #fff;
       font-size: 1.25rem;
     }
   }

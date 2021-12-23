@@ -19,7 +19,7 @@ export function Home() {
   const { setModalOpenCallIsOpen } = useModal();
 
   useEffect(() => {
-    api.get("/manager")
+    api.get("/manager/3")
       .then(repsonse => console.log("Response", repsonse.data))
   });
 

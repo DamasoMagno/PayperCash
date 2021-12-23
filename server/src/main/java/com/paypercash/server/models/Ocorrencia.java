@@ -23,7 +23,17 @@ public class Ocorrencia {
   @JoinColumn(name = "gerente_ocorrencia_id")
   @JsonIgnore
   private GerenteOcorrencias gerenteOcorrencias;
-  
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "tecnico_id")
+  @JsonIgnore
+  private Tecnico tecnico;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn( name = "categoria_ocorrencia_id" )
+  @JsonIgnore
+  private CategoriaOcorrencia categoriaOcorrencia;
+
   private String titulo;
 
   private String descricao;
@@ -89,4 +99,22 @@ public class Ocorrencia {
   public void setGerenteOcorrencias(GerenteOcorrencias gerenteOcorrencias) {
     this.gerenteOcorrencias = gerenteOcorrencias;
   }
+
+  public void setTecnico(Tecnico tecnico) {
+    this.tecnico = tecnico;
+  }
+
+
+  public Tecnico getTecnico() {
+    return this.tecnico;
+  }
+
+
+  public CategoriaOcorrencia getCategoriaOcorrencia() {
+    return this.categoriaOcorrencia;
+  }
+
+  public void setCategoriaOcorrencia(CategoriaOcorrencia categoriaOcorrencia) {
+    this.categoriaOcorrencia = categoriaOcorrencia;
+  }    
 }

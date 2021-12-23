@@ -9,7 +9,7 @@ export const Container = styled.div`
   display: flex;
 `;
 
-export const Form = styled.form`
+export const Form = styled.div`
   width: 100%;
   max-width: 720px;
 

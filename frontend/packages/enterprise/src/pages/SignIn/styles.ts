@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import backgroundImage from "../../assets/Background.png";
+import backgroundImage from "../../assets/background.png";
 
 export const Container = styled.div`
   background: var(--background);
@@ -9,61 +9,55 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.div`
-  width: 100%;
+  width: 60%;
   max-width: 720px;
-
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
 
-  form {
-    text-align: center;
-    width: 60%;
-    
-    h2 {
-      color: #FFF;
-      margin-bottom: 2.25rem;
-      text-transform: uppercase;
-      font-weight: 600;
-      font-size: 2rem;
-    }
-
-    input {
-      width: 100%;
-      font-size: 1.25rem;
-      padding: 1rem;
-      border: 0;
-      border-radius: .25rem;
-      font-weight: 700;
-
-      & + input{
-        margin-top: 1rem;
-      }
-    }
-
-    input {
-      background: #232129;
-      color: #FFF;
-    }
+export const Content = styled.form`
+  h2 {
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 2rem;
+    margin-bottom: 1rem;
   }
 
-  > a {    
+  > a {
     margin-top: 2rem;
-    color: #FFF;
+    color: #fff;
 
     display: flex;
     align-items: center;
-    
+
     img {
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
+  }
+`;
+
+export const TypeAccount = styled.div`
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .5rem;
+
+  button {
+    padding: 0.5rem 1rem;
+    color: #000;
+    border-radius: 0.25rem;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid #fff;
+    font-size: 1.25rem;
   }
 `;
 
 export const Background = styled.section`
   flex: 1;
-
   background: url(${backgroundImage}) no-repeat;
-  background-size: cover;  
-`; 
+  background-size: cover;
+`;

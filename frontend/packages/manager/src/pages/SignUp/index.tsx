@@ -6,13 +6,13 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Form/Button";
 import { Input } from "../../components/Form/Input";
+import { api } from "../../services/api";
 
 type Inputs = {
   nome: string;
   email: string;
   senha: string;
   endereco: string;
-  contato: string;
 }
 
 export function SignUp(){
@@ -20,8 +20,11 @@ export function SignUp(){
 
   const [ step, setStep ] = useState(1);
 
-  function IsHere(){
-    console.log(register);
+  async function signUpUser(data: any){
+    console.log(data);
+
+    const response = await api.post("/manager/1");
+    console.log(response);
   }
 
   return (
@@ -29,10 +32,8 @@ export function SignUp(){
       <Container>
         <Background />    
         <Form>
-          <form>
+          <form onSubmit={handleSubmit(signUpUser)}>
             <h2>Cadastrar</h2>
-            { step === 1 ? (
-              <>
                 <Input 
                   icon={MdHome}
                   register={() => register("nome")}
@@ -49,35 +50,12 @@ export function SignUp(){
                   placeholder="Senha"
                   isPassword
                 />
-                <Button 
-                  title="Próximo" 
-                  type="button" 
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setStep(2)
-                  }}
-                />
-              </>
-            ) : (
-              <>
                 <Input 
                   icon={MdPlace} 
                   register={() => register("endereco")}
                   placeholder="Endereço"
                 />
-                <Input 
-                  icon={MdPhone}
-                  register={() => register("contato")}
-                  placeholder="Contato"
-                />
-                <Button 
-                  title="Passo Anterior" 
-                  onClick={() => setStep(1)} 
-                  type="button"
-                />
                 <Button title="Cadastrar"/>
-              </>
-            )}
           </form>
 
           <Link to="/signIn">

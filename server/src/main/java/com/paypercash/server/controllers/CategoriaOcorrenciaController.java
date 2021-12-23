@@ -8,7 +8,9 @@ import com.paypercash.server.repository.CategoriaOcorrenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +30,25 @@ public class CategoriaOcorrenciaController {
 
   @PostMapping
   public ResponseEntity<?> criarCategoria(@RequestBody CategoriaOcorrencia categoriaOcorrencia){
-    CategoriaOcorrencia categoriaJaExiste = categoriaOcorrenciaRepository.findById(categoriaOcorrencia.getId()).get();
-    if(categoriaJaExiste != null){
+    
+    CategoriaOcorrencia categoriaJaExiste = categoriaOcorrenciaRepository.findById(categoriaOcorrencia.getId())
+                                                                          .orElse(null);
+   
+    if(categoriaJaExiste != null ){
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Essa cateogria já existe");
     }
+
     CategoriaOcorrencia novaCategoria = categoriaOcorrenciaRepository.save(categoriaOcorrencia);
     return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
   }
 
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> removeCategoria(@PathVariable Long id){
+    try {
+      categoriaOcorrenciaRepository.deleteById(id);
+      return ResponseEntity.status(HttpStatus.CREATED).body("Ocorrencia removida");
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+  }
 }

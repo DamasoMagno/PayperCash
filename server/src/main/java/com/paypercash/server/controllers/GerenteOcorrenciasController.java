@@ -34,9 +34,14 @@ public class GerenteOcorrenciasController {
     return gerenteOcorrenciasRepository.findAll();
   }
 
+  @GetMapping("/{id}")
+  public GerenteOcorrencias listarOcorrencia(@PathVariable Long id){
+    return gerenteOcorrenciasRepository.findById(id).get();
+  }
+
   @PostMapping("/{id}")
   public ResponseEntity<?> criarGerente( @RequestBody GerenteOcorrencias gerenteOcorrencias, @PathVariable Long id){
-    Empresa empresa = empresaService.obterEmpresa(id);
+    Empresa empresa = empresaService.obterEmpresaPeloId(id);
     try {
       gerenteOcorrencias.setEmpresa(empresa);
       GerenteOcorrencias gerente = gerenteOcorrenciasRepository.save(gerenteOcorrencias);
@@ -49,15 +54,12 @@ public class GerenteOcorrenciasController {
   @PutMapping("/{id}")
   public ResponseEntity<?> atualizarDados( @RequestBody GerenteOcorrencias gerenteOcorrencias, @PathVariable Long id){
     GerenteOcorrencias gerente = gerenteOcorrenciasRepository.findById(id).get();
-
     if(gerente == null){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gerente nao encontrado");
     }
-
     gerente.setEmail(gerenteOcorrencias.getEmail());
     gerente.setEndereco(gerenteOcorrencias.getEndereco());
     gerente.setNome(gerenteOcorrencias.getNome());
-
     gerenteOcorrenciasRepository.save(gerente);
     return ResponseEntity.status(HttpStatus.GONE).body(gerente);
   }

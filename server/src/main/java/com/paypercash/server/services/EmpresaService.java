@@ -4,6 +4,7 @@ import com.paypercash.server.models.Empresa;
 import com.paypercash.server.repository.EmpresaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,29 +13,32 @@ public class EmpresaService {
   @Autowired
   private EmpresaRepository empresaRepository;
 
-  public Empresa obterEmpresa(Long id){
-    Empresa empresaEncontrada = empresaRepository.findById(id).orElse(null);
-    return empresaEncontrada;
+  @Autowired
+  private BCryptPasswordEncoder passwordEncoder;
+
+  public Empresa obterEmpresaPeloEmail(String email){
+    return empresaRepository.findByEmail(email);
+  }
+
+  public Empresa obterEmpresaPeloId(Long id){
+    return empresaRepository.findById(id).get();
   }
 
   public Empresa criarEmpresa(Empresa empresa){
-    Empresa empresaJaExiste = empresaRepository.findByEmail(empresa.getEmail());
-
+    Empresa empresaJaExiste = obterEmpresaPeloEmail(empresa.getEmail());
     if(empresaJaExiste != null){
-      return null;
+      throw new Error("Esta empresa já existe");
     }
-
+    empresa.setSenha(passwordEncoder.encode(empresa.getSenha()));
     empresaRepository.save(empresa);
     return empresa;
   }  
   
   public Empresa atualizarEmpresaDados(Empresa empresa, Long id){
-    System.out.print(id);
-
-    Empresa empresaEncontrada = empresaRepository.findById(id).get();
+    Empresa empresaEncontrada = obterEmpresaPeloId(id);
 
     if(empresaEncontrada == null){
-      System.out.println("Nenhuma empresa encontrada");
+      throw new Error("Esta empresa não existe");
     }
 
     if(empresa.getEmail() != null){
@@ -50,9 +54,9 @@ public class EmpresaService {
     }
 
     if(empresa.getSenha() != null){
-      empresaEncontrada.setSenha(empresa.getSenha());
+      empresaEncontrada.setSenha(passwordEncoder.encode(empresa.getSenha()));
     }
-
+    
     return empresaEncontrada;
   }
 }

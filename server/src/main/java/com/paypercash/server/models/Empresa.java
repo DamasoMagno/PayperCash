@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-
 import java.util.List;
 
 @Entity
@@ -40,10 +39,6 @@ public class Empresa implements Serializable {
 
   public Long getId() {
     return this.id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   public String getNome() {
@@ -90,16 +85,7 @@ public class Empresa implements Serializable {
     return this.tecnicos;
   }
 
-  public void setTecnicos(List<Tecnico> tecnicos) {
-    this.tecnicos = tecnicos;
-  }
-
   public List<GerenteOcorrencias> getGerenteOcorrencias() {
     return this.gerenteOcorrencias;
   }
-
-  public void setGerenteOcorrencias(List<GerenteOcorrencias> gerenteOcorrencias) {
-    this.gerenteOcorrencias = gerenteOcorrencias;
-  }
-
 }

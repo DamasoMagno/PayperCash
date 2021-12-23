@@ -3,12 +3,15 @@ package com.paypercash.server.controllers;
 import java.util.List;
 
 import com.paypercash.server.models.Ocorrencia;
+import com.paypercash.server.models.Tecnico;
 import com.paypercash.server.repository.OcorrenciaRepository;
+import com.paypercash.server.repository.TecnicoRepository;
 import com.paypercash.server.services.OcorrenciaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +29,9 @@ public class OcorrenciaController {
 
   @Autowired
   private OcorrenciaService ocorrenciaService;
+
+  @Autowired
+  private TecnicoRepository tecnicoRepository;
 
   @GetMapping
   public List<Ocorrencia> listarOcorrencias(){
@@ -52,17 +58,46 @@ public class OcorrenciaController {
     }
   }
 
-  @PutMapping("/{id}")
+  @PutMapping("/finalizar/{id}")
   public ResponseEntity<?> finalizarOcorrencia(@PathVariable Long id, @RequestBody Ocorrencia ocorrencia){ 
     Ocorrencia ocorrenciaExiste = ocorrenciaService.obterOcorrencia(id);
+    
     try {
       if(ocorrencia.getResolucao() != null){
         ocorrenciaExiste.setResolucao(ocorrencia.getResolucao());
       }
+
+      if(ocorrencia.getData_finalizacao() != null ){
+        ocorrenciaExiste.setData_finalizacao(ocorrencia.getData_finalizacao());
+      }
+
       ocorrenciaRepository.save(ocorrenciaExiste);
       return ResponseEntity.status(HttpStatus.CREATED).body(ocorrencia.getResolucao());
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+  }
+
+  @PutMapping("atender/{id}")
+  public ResponseEntity<?> atenderOcorrencia(@PathVariable Long id, @RequestBody Tecnico tecnico){
+    Ocorrencia ocorrenciaExiste = ocorrenciaService.obterOcorrencia(id);
+    
+    try {
+      if(tecnico.getEmail() != null){
+        Tecnico tecnicoEncontrado = tecnicoRepository.findByEmail(tecnico.getEmail());
+        ocorrenciaExiste.setTecnico(tecnicoEncontrado);
+      }
+
+      ocorrenciaRepository.save(ocorrenciaExiste);
+      System.out.print(ocorrenciaExiste.getTecnico());
+      return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaExiste);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+  }
+
+  @DeleteMapping("/{id}")
+  public void removerOcorrencia(@PathVariable Long id){
+    ocorrenciaRepository.deleteById(id);
   }
 }

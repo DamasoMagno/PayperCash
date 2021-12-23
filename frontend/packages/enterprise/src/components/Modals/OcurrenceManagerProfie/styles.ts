@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.form`
   max-width: 50%;
@@ -25,6 +25,12 @@ export const Container = styled.form`
       justify-content: center;
       align-items: center;
       font-weight: 600;
+      border-radius: .25rem;
+
+      &.whatsapp {
+        background: green;
+        color: #FFF;
+      }
     }
   }
 `;

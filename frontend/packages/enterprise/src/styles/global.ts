@@ -4,7 +4,6 @@ const openModal = keyframes`
   0% {
     top: 100%;
   }
-
   100% {
     top: 50%;
     transform: translateY(-50%);
@@ -43,8 +42,9 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
-  [disabled]{
+  button[disabled]{
     opacity: .7;
+    cursor: not-allowed;
   }
 
   .modalOverlay {
@@ -62,7 +62,7 @@ export default createGlobalStyle`
   .modalContent {
     animation: 1s ${openModal} forwards;
     position: absolute;
-    width: 700px;
+    width: 600px;
     border-radius: .25rem;
     background-color: #FFF;
   }

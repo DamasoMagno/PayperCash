@@ -1,11 +1,11 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.form`
   max-width: 90%;
   margin: 0 auto;
   text-align: center;
   padding: 1rem 0 2rem;
-  
+
   h1 {
     margin: 1rem 0 1.5rem;
   }
@@ -17,15 +17,15 @@ export const Container = styled.form`
     gap: 1rem;
 
     button {
-      padding: 1rem .5rem;
-      border-radius: .25rem;
+      padding: 1rem 0.5rem;
+      border-radius: 0.25rem;
       font-size: 1rem;
       font-weight: 500;
 
       &.edit {
-      background-color: var(--button);
-      color: #FFF;
-    }
+        background-color: var(--button);
+        color: #fff;
+      }
     }
   }
 `;
