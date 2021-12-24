@@ -15,75 +15,95 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Tecnico implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "empresa_id")
-  @JsonIgnore
-  private Empresa empresa;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "empresa_id")
+	@JsonIgnore
+	private Empresa empresa;
 
-  private String nome;
-  
-  private String email;
-  
-  private String senha;
+	private String nome;
 
-  @OneToMany(mappedBy = "tecnico", cascade = CascadeType.ALL)
-  private List<Ocorrencia> ocorrencias;
+	private String email;
 
-  public Long getId() {
-    return this.id;
-  }
+	private String senha;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+	@OneToMany(mappedBy = "tecnico", cascade = CascadeType.ALL)
+	private List<Ocorrencia> ocorrencias;
 
-  public Empresa getEmpresa() {
-    return this.empresa;
-  }
+	public Long getId() {
+		return this.id;
+	}
 
-  public void setEmpresa(Empresa empresa) {
-    this.empresa = empresa;
-  }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-  public String getNome() {
-    return this.nome;
-  }
+	public Empresa getEmpresa() {
+		return this.empresa;
+	}
 
-  public void setNome(String nome) {
-    this.nome = nome;
-  }
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
 
-  public String getEmail() {
-    return this.email;
-  }
+	public String getNome() {
+		return this.nome;
+	}
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-  public String getSenha() {
-    return this.senha;
-  }
+	public String getEmail() {
+		return this.email;
+	}
 
-  public void setSenha(String senha) {
-    this.senha = senha;
-  }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-  public List<Ocorrencia> getOcorrencias() {
-    return this.ocorrencias;
-  }
+	public String getSenha() {
+		return this.senha;
+	}
 
-  public void setOcorrencias(List<Ocorrencia> ocorrencias) {
-    this.ocorrencias = ocorrencias;
-  }  
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public List<Ocorrencia> getOcorrencias() {
+		return this.ocorrencias;
+	}
+
+	public void setOcorrencias(List<Ocorrencia> ocorrencias) {
+		this.ocorrencias = ocorrencias;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tecnico other = (Tecnico) obj;
+		return Objects.equals(id, other.id);
+	}  
+
+
 }

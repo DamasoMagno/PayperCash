@@ -12,7 +12,6 @@ import com.paypercash.server.services.TecnicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,36 +24,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/technicians")
 @RestController
 public class TecnicoController {
-
+	
   @Autowired
   private TecnicoRepository tecnicoRepository;
-
-  @Autowired
-  private BCryptPasswordEncoder passwordEncoder;
-
   @Autowired
   private EmpresaService empresaService;
-
   @Autowired
   private TecnicoService tecnicoService;
 
   @GetMapping
   public List<Tecnico> listaTecnicos(){
-    List<Tecnico> tecnicos = tecnicoRepository.findAll();
-    return tecnicos;
+	  return tecnicoRepository.findAll();
   }
 
   @GetMapping("/{id}")
   public Tecnico obterTecnico(@PathVariable Long id){
-    Tecnico tecnicoEncontrado = tecnicoRepository.findById(id).get(); 
-    return tecnicoEncontrado;
+	  return tecnicoRepository.findById(id).get(); 
   }
 
   @PostMapping("/{id}")
   public ResponseEntity<?> criarTecnico(@PathVariable Long id, @RequestBody Tecnico tecnico){
     Empresa empresa = empresaService.obterEmpresaPeloId(id);
     tecnico.setEmpresa(empresa);
-    tecnico.setSenha(passwordEncoder.encode(tecnico.getSenha()));
     Tecnico tec = tecnicoRepository.save(tecnico); 
     return ResponseEntity.status(HttpStatus.CREATED).body(tec);
   }

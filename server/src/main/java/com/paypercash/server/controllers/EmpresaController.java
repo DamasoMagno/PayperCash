@@ -26,7 +26,6 @@ public class EmpresaController {
 
   @Autowired
   private EmpresaRepository empresaRepository;
-
   @Autowired
   private EmpresaService empresaServices;
 
@@ -51,7 +50,7 @@ public class EmpresaController {
       Empresa empresaCriada = empresaServices.criarEmpresa(empresa); 
       return ResponseEntity.status(HttpStatus.CREATED).body(empresaCriada);
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Esta empresa já existe");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
     }
   }  
 

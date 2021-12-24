@@ -11,81 +11,101 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Empresa implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  private String nome; 
+	private String nome; 
 
-  private String email;
+	private String email;
 
-  private String senha;
+	private String senha;
 
-  private String endereco;
+	private String endereco;
 
-  private Date data_criacao;
+	private Date data_criacao;
 
-  @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-  private List<Tecnico> tecnicos;
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+	private List<Tecnico> tecnicos;
 
-  @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-  private List<GerenteOcorrencias> gerenteOcorrencias;
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+	private List<GerenteOcorrencias> gerenteOcorrencias;
 
-  public Long getId() {
-    return this.id;
-  }
+	public Long getId() {
+		return this.id;
+	}
 
-  public String getNome() {
-    return this.nome;
-  }
+	public String getNome() {
+		return this.nome;
+	}
 
-  public void setNome(String nome) {
-    this.nome = nome;
-  }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-  public String getEmail() {
-    return this.email;
-  }
+	public String getEmail() {
+		return this.email;
+	}
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-  public String getSenha() {
-    return this.senha;
-  }
+	public String getSenha() {
+		return this.senha;
+	}
 
-  public void setSenha(String senha) {
-    this.senha = senha;
-  }
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 
-  public String getEndereco() {
-    return this.endereco;
-  }
+	public String getEndereco() {
+		return this.endereco;
+	}
 
-  public void setEndereco(String endereco) {
-    this.endereco = endereco;
-  }
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
 
-  public Date getData_criacao() {
-    return this.data_criacao;
-  }
+	public Date getData_criacao() {
+		return this.data_criacao;
+	}
 
-  public void setData_criacao(Date data_criacao) {
-    this.data_criacao = data_criacao;
-  }
+	public void setData_criacao(Date data_criacao) {
+		this.data_criacao = data_criacao;
+	}
 
-    public List<Tecnico> getTecnicos() {
-    return this.tecnicos;
-  }
+	public List<Tecnico> getTecnicos() {
+		return this.tecnicos;
+	}
 
-  public List<GerenteOcorrencias> getGerenteOcorrencias() {
-    return this.gerenteOcorrencias;
-  }
+	public List<GerenteOcorrencias> getGerenteOcorrencias() {
+		return this.gerenteOcorrencias;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Empresa other = (Empresa) obj;
+		return Objects.equals(id, other.id);
+	}
+
+  
 }

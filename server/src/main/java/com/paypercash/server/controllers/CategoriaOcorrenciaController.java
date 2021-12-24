@@ -20,35 +20,40 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/categories")
 public class CategoriaOcorrenciaController {
 
-  @Autowired
-  private CategoriaOcorrenciaRepository categoriaOcorrenciaRepository;
+	@Autowired
+	private CategoriaOcorrenciaRepository categoriaOcorrenciaRepository;
+	
+	@GetMapping
+	public List<CategoriaOcorrencia> listarCategorias(){
+		return categoriaOcorrenciaRepository.findAll();
+	}
 
-  @GetMapping
-  public List<CategoriaOcorrencia> listarCategorias(){
-    return categoriaOcorrenciaRepository.findAll();
-  }
+	@GetMapping("/{id}")
+	public CategoriaOcorrencia listarCategoria(@PathVariable Long id) {
+		return categoriaOcorrenciaRepository.findById(id).get();
+	}
+	
+	@PostMapping
+	public ResponseEntity<?> criarCategoria(@RequestBody CategoriaOcorrencia categoriaOcorrencia){
 
-  @PostMapping
-  public ResponseEntity<?> criarCategoria(@RequestBody CategoriaOcorrencia categoriaOcorrencia){
-    
-    CategoriaOcorrencia categoriaJaExiste = categoriaOcorrenciaRepository.findById(categoriaOcorrencia.getId())
-                                                                          .orElse(null);
-   
-    if(categoriaJaExiste != null ){
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Essa cateogria já existe");
-    }
+		CategoriaOcorrencia categoriaJaExiste = categoriaOcorrenciaRepository.findById(categoriaOcorrencia.getId())
+				.orElse(null);
 
-    CategoriaOcorrencia novaCategoria = categoriaOcorrenciaRepository.save(categoriaOcorrencia);
-    return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
-  }
+		if(categoriaJaExiste != null ){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Essa cateogria já existe");
+		}
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<?> removeCategoria(@PathVariable Long id){
-    try {
-      categoriaOcorrenciaRepository.deleteById(id);
-      return ResponseEntity.status(HttpStatus.CREATED).body("Ocorrencia removida");
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-  }
+		CategoriaOcorrencia novaCategoria = categoriaOcorrenciaRepository.save(categoriaOcorrencia);
+		return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> removeCategoria(@PathVariable Long id){
+		try {
+			categoriaOcorrenciaRepository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.CREATED).body("Ocorrencia removida");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
 }

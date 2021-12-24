@@ -2,6 +2,7 @@ package com.paypercash.server.controllers;
 
 import java.util.List;
 
+import com.paypercash.server.models.CategoriaOcorrencia;
 import com.paypercash.server.models.Ocorrencia;
 import com.paypercash.server.models.Tecnico;
 import com.paypercash.server.repository.OcorrenciaRepository;
@@ -26,10 +27,8 @@ public class OcorrenciaController {
   
   @Autowired
   private OcorrenciaRepository ocorrenciaRepository;
-
   @Autowired
   private OcorrenciaService ocorrenciaService;
-
   @Autowired
   private TecnicoRepository tecnicoRepository;
 
@@ -39,7 +38,7 @@ public class OcorrenciaController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> obtOcorrencia(@PathVariable Long id){
+  public ResponseEntity<?> obterOcorrencia(@PathVariable Long id){
     try {
       Ocorrencia ocorrenciaEncontrada = ocorrenciaService.obterOcorrencia(id);
       return ResponseEntity.status(HttpStatus.FOUND).body(ocorrenciaEncontrada);
@@ -49,7 +48,11 @@ public class OcorrenciaController {
   }
 
   @PostMapping("/{id}")
-  public ResponseEntity<?> criarOcorrencia(@RequestBody Ocorrencia ocorrencia, @PathVariable Long id){ 
+  public ResponseEntity<?> criarOcorrencia(
+		  @RequestBody Ocorrencia ocorrencia, 
+		  @PathVariable Long id, 
+		  @RequestBody CategoriaOcorrencia categoriaOcorrencia
+	){ 
     try {
       Ocorrencia ocorrenciaCriada = ocorrenciaService.criarOcorrencia(ocorrencia, id);
       return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaCriada);
@@ -58,28 +61,18 @@ public class OcorrenciaController {
     }
   }
 
-  @PutMapping("/finalizar/{id}")
+  @PutMapping("finalizar/{id}")
   public ResponseEntity<?> finalizarOcorrencia(@PathVariable Long id, @RequestBody Ocorrencia ocorrencia){ 
-    Ocorrencia ocorrenciaExiste = ocorrenciaService.obterOcorrencia(id);
-    
     try {
-      if(ocorrencia.getResolucao() != null){
-        ocorrenciaExiste.setResolucao(ocorrencia.getResolucao());
-      }
-
-      if(ocorrencia.getData_finalizacao() != null ){
-        ocorrenciaExiste.setData_finalizacao(ocorrencia.getData_finalizacao());
-      }
-
-      ocorrenciaRepository.save(ocorrenciaExiste);
-      return ResponseEntity.status(HttpStatus.CREATED).body(ocorrencia.getResolucao());
+      Ocorrencia ocorrenciaAtualizada = ocorrenciaService.finalizarOcorrencia(ocorrencia, id);
+      return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaAtualizada);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
   }
 
   @PutMapping("atender/{id}")
-  public ResponseEntity<?> atenderOcorrencia(@PathVariable Long id, @RequestBody Tecnico tecnico){
+  public ResponseEntity<?> prestarSuporteOcorrencia(@PathVariable Long id, @RequestBody Tecnico tecnico){
     Ocorrencia ocorrenciaExiste = ocorrenciaService.obterOcorrencia(id);
     
     try {
@@ -89,7 +82,6 @@ public class OcorrenciaController {
       }
 
       ocorrenciaRepository.save(ocorrenciaExiste);
-      System.out.print(ocorrenciaExiste.getTecnico());
       return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaExiste);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

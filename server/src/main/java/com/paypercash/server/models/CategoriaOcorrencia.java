@@ -1,59 +1,71 @@
 package com.paypercash.server.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class CategoriaOcorrencia {
-  
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+public class CategoriaOcorrencia implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-  @OneToMany(mappedBy = "categoriaOcorrencia")
-  private List<Ocorrencia> ocorrencia;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  private String tipo_categoria;
+	@OneToMany(mappedBy = "categoriaOcorrencia", cascade = CascadeType.ALL)
+	private List<Ocorrencia> ocorrencia;
 
-  public Long getId() {
-    return this.id;
-  }
+	private String tipo_categoria;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+	public Long getId() {
+		return this.id;
+	}
 
-  public String getTipo_categoria() {
-    return this.tipo_categoria;
-  }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-  public void setTipo_categoria(String tipo_categoria) {
-    this.tipo_categoria = tipo_categoria;
-  }
+	public String getTipo_categoria() {
+		return this.tipo_categoria;
+	}
 
-@Override
-public int hashCode() {
-	return Objects.hash(id);
-}
+	public void setTipo_categoria(String tipo_categoria) {
+		this.tipo_categoria = tipo_categoria;
+	}
 
-@Override
-public boolean equals(Object obj) {
-	if (this == obj)
-		return true;
-	if (obj == null)
-		return false;
-	if (getClass() != obj.getClass())
-		return false;
-	CategoriaOcorrencia other = (CategoriaOcorrencia) obj;
-	return Objects.equals(id, other.id);
-}
-  
-  
+	
+	public List<Ocorrencia> getOcorrencia() {
+		return ocorrencia;
+	}
+
+	public void setOcorrencia(List<Ocorrencia> ocorrencia) {
+		this.ocorrencia = ocorrencia;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CategoriaOcorrencia other = (CategoriaOcorrencia) obj;
+		return Objects.equals(id, other.id);
+	}
+
+
 
 }

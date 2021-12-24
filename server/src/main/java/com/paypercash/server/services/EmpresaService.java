@@ -3,8 +3,9 @@ package com.paypercash.server.services;
 import com.paypercash.server.models.Empresa;
 import com.paypercash.server.repository.EmpresaRepository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,9 +13,6 @@ public class EmpresaService {
 
   @Autowired
   private EmpresaRepository empresaRepository;
-
-  @Autowired
-  private BCryptPasswordEncoder passwordEncoder;
 
   public Empresa obterEmpresaPeloEmail(String email){
     return empresaRepository.findByEmail(email);
@@ -25,12 +23,14 @@ public class EmpresaService {
   }
 
   public Empresa criarEmpresa(Empresa empresa){
-    Empresa empresaJaExiste = obterEmpresaPeloEmail(empresa.getEmail());
-    if(empresaJaExiste != null){
-      throw new Error("Esta empresa já existe");
+    List<Empresa> empresaJaExiste = empresaRepository.findAll();
+    
+    if(empresaJaExiste.size() == 1){
+      throw new Error("Não é possivel cadastrar mais de uma empresa no ssitema");
     }
-    empresa.setSenha(passwordEncoder.encode(empresa.getSenha()));
+    
     empresaRepository.save(empresa);
+    
     return empresa;
   }  
   
@@ -54,7 +54,7 @@ public class EmpresaService {
     }
 
     if(empresa.getSenha() != null){
-      empresaEncontrada.setSenha(passwordEncoder.encode(empresa.getSenha()));
+      empresaEncontrada.setSenha(empresa.getSenha());
     }
     
     return empresaEncontrada;

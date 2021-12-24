@@ -1,6 +1,8 @@
 package com.paypercash.server.models;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,77 +17,98 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class GerenteOcorrencias {
-  
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+public class GerenteOcorrencias implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
-  private String nome;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  private String email;
+	private String nome;
 
-  private String senha;
+	private String email;
 
-  private String endereco;
+	private String senha;
 
-  @OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL)
-  private List<Ocorrencia> ocorrencias;
+	private String endereco;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "empresa_id")
-  @JsonIgnore
-  private Empresa empresa;
+	@OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL)
+	private List<Ocorrencia> ocorrencias;
 
-  public Long getId() {
-    return this.id;
-  }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "empresa_id")
+	@JsonIgnore
+	private Empresa empresa;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+	public Long getId() {
+		return this.id;
+	}
 
-  public Empresa getEmpresa() {
-    return this.empresa;
-  }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-  public void setEmpresa(Empresa empresa) {
-    this.empresa = empresa;
-  }
+	public Empresa getEmpresa() {
+		return this.empresa;
+	}
 
-  public String getNome() {
-    return this.nome;
-  }
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
 
-  public void setNome(String nome) {
-    this.nome = nome;
-  }
+	public String getNome() {
+		return this.nome;
+	}
 
-  public String getEmail() {
-    return this.email;
-  }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+	public String getEmail() {
+		return this.email;
+	}
 
-  public String getSenha() {
-    return this.senha;
-  }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-  public void setSenha(String senha) {
-    this.senha = senha;
-  }
+	public String getSenha() {
+		return this.senha;
+	}
 
-  public String getEndereco() {
-    return this.endereco;
-  }
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 
-  public void setEndereco(String endereco) {
-    this.endereco = endereco;
-  }
+	public String getEndereco() {
+		return this.endereco;
+	}
 
-  public List<Ocorrencia> getOcorrencias() {
-    return this.ocorrencias;
-  }
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+	public List<Ocorrencia> getOcorrencias() {
+		return this.ocorrencias;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GerenteOcorrencias other = (GerenteOcorrencias) obj;
+		return Objects.equals(id, other.id);
+	}
+
+
 }

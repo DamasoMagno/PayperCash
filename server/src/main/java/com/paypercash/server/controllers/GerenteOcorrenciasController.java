@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.paypercash.server.models.Empresa;
 import com.paypercash.server.models.GerenteOcorrencias;
+import com.paypercash.server.repository.EmpresaRepository;
 import com.paypercash.server.repository.GerenteOcorrenciasRepository;
 import com.paypercash.server.services.EmpresaService;
 
@@ -25,9 +26,8 @@ public class GerenteOcorrenciasController {
   
   @Autowired
   private GerenteOcorrenciasRepository gerenteOcorrenciasRepository;
-
   @Autowired
-  private EmpresaService empresaService;
+  private EmpresaRepository empresaRepository;
 
   @GetMapping
   public List<GerenteOcorrencias> listarTodos(){
@@ -35,15 +35,16 @@ public class GerenteOcorrenciasController {
   }
 
   @GetMapping("/{id}")
-  public GerenteOcorrencias listarOcorrencia(@PathVariable Long id){
+  public GerenteOcorrencias listarGerente(@PathVariable Long id){
     return gerenteOcorrenciasRepository.findById(id).get();
   }
 
-  @PostMapping("/{id}")
-  public ResponseEntity<?> criarGerente( @RequestBody GerenteOcorrencias gerenteOcorrencias, @PathVariable Long id){
-    Empresa empresa = empresaService.obterEmpresaPeloId(id);
+  @PostMapping
+  public ResponseEntity<?> criarGerente( @RequestBody GerenteOcorrencias gerenteOcorrencias){
+    List<Empresa> empresas = empresaRepository.findAll();
+    System.out.print(empresas.get(0));
     try {
-      gerenteOcorrencias.setEmpresa(empresa);
+      gerenteOcorrencias.setEmpresa(empresas.get(0));
       GerenteOcorrencias gerente = gerenteOcorrenciasRepository.save(gerenteOcorrencias);
       return ResponseEntity.status(HttpStatus.CREATED).body(gerente);
     } catch (Exception e) {
