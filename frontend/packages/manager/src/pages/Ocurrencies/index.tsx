@@ -1,43 +1,45 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
-import { api } from "../../services/api";
+import { MdArrowRight, MdPeople } from "react-icons/md";
 
 import { OpenCallModal } from "../../components/OpenCallModal";
 import { Header } from "../../components/Header";
 import { useModal } from "../../hooks/useModal";
 
-import { Content, Buttons, HistoricCalls, Ocurrency, RecentCall } from "./styles";
+import {
+  Content,
+  Buttons,
+  HistoricCalls,
+  Ocurrency,
+  RecentCall,
+} from "./styles";
 
 import horarioImage from "../../assets/horario.png";
-import accountImage from "../../assets/account.png"
+import accountImage from "../../assets/account.png";
 import callImage from "../../assets/call.png";
-
 
 export function Home() {
   const { setModalOpenCallIsOpen } = useModal();
 
-  useEffect(() => {
-    api.get("/manager/3")
-      .then(repsonse => console.log("Response", repsonse.data))
-  });
-
-  const ocurrencies =  [
+  const ocurrencies = [
     { id: 1, hour: "8:30", title: "Notebook não está ligando", period: "Hoje" },
-    { id: 2, hour: "10:25", title: "Servidor, está bloqueando o acesso aos sites", period: "Ontem" },
-    { id: 3, hour: "9:30", title: "Tal problema", period: "Hoje"},
-  ]
+    {
+      id: 2,
+      hour: "10:25",
+      title: "Servidor, está bloqueando o acesso aos sites",
+      period: "Ontem",
+    },
+    { id: 3, hour: "9:30", title: "Tal problema", period: "Hoje" },
+  ];
 
   const ocurrenciesByPeriod: any = [];
 
-  for(const ocurrency of ocurrencies){
+  for (const ocurrency of ocurrencies) {
     const index = ocurrenciesByPeriod[ocurrency.period];
-    if(!index){
+    if (!index) {
       ocurrenciesByPeriod[ocurrency.period] = [];
     }
     ocurrenciesByPeriod[ocurrency.period].push(ocurrency);
-  }  
+  }
 
   return (
     <>
@@ -47,9 +49,9 @@ export function Home() {
             <img src={callImage} alt="Abrir Chamado" /> Abrir Chamado
           </button>
           <Link to="/account">
-            <img src={accountImage} alt="Conta" /> Conta
+            <MdPeople size={24} color="#000"/> Conta
           </Link>
-        </Buttons> 
+        </Buttons>
       </Header>
 
       <Content>
@@ -57,31 +59,34 @@ export function Home() {
           <header>
             <p>Chamado Recente</p>
           </header>
-          <div>
+          <div onClick={() => setModalOpenCallIsOpen(true)}>
             <strong> Notebook não está ligando </strong>
-            <FiArrowRight />
+            <MdArrowRight />
           </div>
         </RecentCall>
 
         <HistoricCalls>
-          { Object.keys(ocurrenciesByPeriod).map( (ocurrency: any) => (
+          {Object.keys(ocurrenciesByPeriod).map((ocurrency: any) => (
             <div className="period" key={ocurrency.id}>
-              <p>{ ocurrency }</p>
-              { ocurrenciesByPeriod[ocurrency].map( (ocurrency: any) => (
+              <p>{ocurrency}</p>
+              {ocurrenciesByPeriod[ocurrency].map((ocurrency: any) => (
                 <Ocurrency key={ocurrency.title}>
                   <div className="scheduleCall">
                     <img src={horarioImage} alt="Horário da Chamada" />
                     <span>{ocurrency.hour}</span>
                   </div>
-            
-                  <div className="titleCall" onClick={() => setModalOpenCallIsOpen(true)}>
+
+                  <div
+                    className="titleCall"
+                    onClick={() => setModalOpenCallIsOpen(true)}
+                  >
                     <p>{ocurrency.title}</p>
-                    <FiArrowRight color="#FFF"/>
+                    <MdArrowRight color="#FFF" />
                   </div>
                 </Ocurrency>
               ))}
             </div>
-          )) }
+          ))}
         </HistoricCalls>
       </Content>
       <OpenCallModal />

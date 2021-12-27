@@ -1,11 +1,10 @@
 import styled from "styled-components";
 
-import backgroundImage from "../../assets/Background.png";
+import backgroundImage from "../../assets/background.png";
 
 export const Container = styled.div`
   background: var(--heading);
   height: 100vh;
-
   display: flex;
 `;
 
@@ -21,9 +20,9 @@ export const Form = styled.div`
   form {
     text-align: center;
     width: 60%;
-    
+
     h2 {
-      color: #FFF;
+      color: #fff;
       margin-bottom: 2.25rem;
       text-transform: uppercase;
       font-weight: 600;
@@ -35,36 +34,35 @@ export const Form = styled.div`
       font-size: 1.25rem;
       padding: 1rem;
       border: 0;
-      border-radius: .25rem;
+      border-radius: 0.25rem;
       font-weight: 700;
 
-      & + input{
+      & + input {
         margin-top: 1rem;
       }
     }
 
     input {
       background: #232129;
-      color: #FFF;
+      color: #fff;
     }
   }
 
-  > a {    
+  > a {
     margin-top: 2rem;
-    color: #FFF;
+    color: #fff;
 
     display: flex;
     align-items: center;
-    
+
     img {
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
   }
 `;
 
 export const Background = styled.section`
   flex: 1;
-
   background: url(${backgroundImage}) no-repeat;
-  background-size: cover;  
-`; 
+  background-size: cover;
+`;

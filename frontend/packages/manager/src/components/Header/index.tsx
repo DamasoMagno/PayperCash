@@ -3,14 +3,12 @@ import { Container, Content } from "./styles";
 
 type Header = {
   children: ReactNode;
-}
+};
 
-export function Header({ children }: Header){
+export function Header({ children }: Header) {
   return (
     <Container>
-      <Content>
-        { children }
-      </Content>
+      <Content>{children}</Content>
     </Container>
   );
 }

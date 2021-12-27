@@ -14,13 +14,13 @@ export const Container = styled.form`
   }
 
   div.buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
     gap: 1rem;
 
     button {
       height: 3rem;
       border: 0;
+      width: 100%;
       font-size: 1rem;
       font-weight: bold;
       border-radius: .4rem;

@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
-import { api } from "../../services/api";
 import { useForm } from "react-hook-form";
-import { MdMail, MdPlace, MdHome, MdContactPhone, MdArrowBack, MdLogout } from "react-icons/md";
+import {
+  MdMail,
+  MdPlace,
+  MdHome,
+  MdContactPhone,
+  MdArrowBack,
+  MdLogout,
+  MdPeople,
+} from "react-icons/md";
 
 import { Header } from "../../components/Header";
 import { Input } from "../../components/Form/Input";
@@ -9,31 +16,26 @@ import { Input } from "../../components/Form/Input";
 import { Container, Buttons } from "./styles";
 
 import localization from "../../assets/localeMap.png";
-import { useQuery } from "react-query";
 
 type User = {
+  unity: string;
   name: string;
   email: string;
   address: string;
   contact: string;
-}
+};
 
-export function UserProfile(){
+export function UserProfile() {
   const { register } = useForm<User>();
-
-  const { data: user } = useQuery<User>("manager", async () => {
-    const response = await api.get("manager");
-    return response.data;
-  });
 
   return (
     <>
       <Header>
         <Buttons>
-          <Link to="/">
-            <MdArrowBack size={24}/>
+          <Link to="/ocurrencies">
+            <MdArrowBack size={24} />
           </Link>
-          <Link to="/signIn">
+          <Link to="/">
             <MdLogout size={24} color="#FFF" />
           </Link>
         </Buttons>
@@ -41,28 +43,33 @@ export function UserProfile(){
 
       <Container>
         <div className="locale">
-          <img src={ localization } alt="React Leaflet" />
+          <img src={localization} alt="React Leaflet" />
         </div>
 
-        <Input 
-          icon={MdHome} 
-          value={user?.name}
+        <Input
+          icon={MdHome}
+          value="Unidade Madalenas"
+          register={() => register("unity")}
+        />
+        <Input
+          icon={MdPeople}
+          value="Damaso Magno"
           register={() => register("name")}
         />
-        <Input 
-          icon={MdPlace} 
-          value={user?.address}
+        <Input
+          icon={MdPlace}
+          value="Ana Luiza Braga, 1881"
           register={() => register("address")}
         />
-        <Input 
-          icon={MdMail} 
-          value={user?.email}
+        <Input
+          icon={MdMail}
+          value="damasomlima@gmail.com"
           register={() => register("email")}
         />
-        <Input 
-          icon={MdContactPhone} 
-          value={user?.contact}
-          register={() => register("contact")}  
+        <Input
+          icon={MdContactPhone}
+          value="(88) 9 9601-8788"
+          register={() => register("contact")}
         />
 
         <button className="confirmChanges " type="submit">

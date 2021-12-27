@@ -12,20 +12,25 @@ interface InputProfileProps extends InputHTMLAttributes<HTMLInputElement> {
   register: () => UseFormRegisterReturn;
 }
 
-export function Input({ icon: Icon, isPassword, register, ...rest }: InputProfileProps){
-  const [ showPassword, setShowPassword ] = useState(false);
+export function Input({
+  icon: Icon,
+  isPassword,
+  register,
+  ...rest
+}: InputProfileProps) {
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Container>
-      { <Icon color="#666360" size={24}/> }
-      <input 
-        type={ isPassword && !showPassword ? "password" : "text" }
-        {...register()} 
-        {...rest} 
+      {<Icon color="#666360" size={24} />}
+      <input
+        type={isPassword && !showPassword ? "password" : "text"}
+        {...register()}
+        {...rest}
       />
-      { isPassword && (
+      {isPassword && (
         <button onClick={() => setShowPassword(!showPassword)} type="button">
-          { showPassword ? <FiEyeOff color="#FFF"/> : <FiEye color="#FFF"/> }
+          {showPassword ? <FiEyeOff color="#FFF" /> : <FiEye color="#FFF" />}
         </button>
       )}
     </Container>
