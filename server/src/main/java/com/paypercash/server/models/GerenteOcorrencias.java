@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.paypercash.server.enums.Perfil;
 
 @Entity
 public class GerenteOcorrencias implements Serializable {
@@ -35,12 +36,20 @@ public class GerenteOcorrencias implements Serializable {
 
 	@OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL)
 	private List<Ocorrencia> ocorrencias;
+	
+	private Perfil perfil = Perfil.GERENTE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
+	
 	private Empresa empresa;
 
+	
+	public Perfil getPerfil() {
+		return perfil;
+	}
+	
 	public Long getId() {
 		return this.id;
 	}

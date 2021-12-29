@@ -1,8 +1,6 @@
 import ReactModal from "react-modal";
 
-import { Container } from "./styles";
-
-import { Button } from "primereact/button";
+import { Container } from "./styles"; 
 
 type TechnicianModalProps = {
   isOpen: boolean;
@@ -21,11 +19,14 @@ export function CreateTechnicianModal({
       className="modalContent"
     >
       <Container>
-        <h1>Cadastrar Tecnico</h1>
+        <h2>Cadastrar Tecnico</h2>
         <input type="text" placeholder="Nome" />
         <input type="text" placeholder="Email" />
         <input type="text" placeholder="Senha" />
-        <button type="submit">Cadastrar</button>
+        <div>
+          <button type="button" onClick={onRequestClose}>Cancelar</button>
+          <button type="submit"className="create">Cadastrar</button>
+        </div>
       </Container>
     </ReactModal>
   );

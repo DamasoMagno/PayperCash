@@ -3,13 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { Filters } from "../../components/Filters";
 import { SideBar } from "../../components/SideBar";
 
-import { Button  } from "primereact/button";
-
 import { Container, Period, Ocurrency, Content } from "./styles";
 
 import scheduleImage from "../../assets/schedule.svg";
 import showOcurrencyImage from "../../assets/showOcurrency.png";
-import { useState } from "react";
 
 export function Ocurrencies() {
   const { status } = useParams();

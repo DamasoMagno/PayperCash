@@ -1,0 +1,19 @@
+{Object.keys(ocurrenciesByPeriod).map((ocurrency: any) => (
+            <div className="period" key={ocurrency.id}>
+              <p>{ocurrency}</p>
+              {ocurrenciesByPeriod[ocurrency].map((ocurrency: any) => (
+                <Ocurrency key={ocurrency.title}>
+                  <div className="scheduleCall">
+                    <img src={horarioImage} alt="Horário da Chamada" />
+                    <span>{ocurrency.hour}</span>
+                  </div>
+
+                  <div
+                    className="titleCall"
+                    onClick={() => setModalOpenCallIsOpen(true)}
+                  >
+                    <p>{ocurrency.title}</p>
+                    <MdArrowRight color="#FFF" />
+                  </div>
+                </Ocurrency>
+              ))}

@@ -1,12 +1,12 @@
-import { FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdArrowLeft, MdMail, MdHome, MdPlace, MdLock } from "react-icons/md";
 
 import { Button } from "../../components/Form/Button";
 import { Input } from "../../components/Form/Input";
 
 import { Container, Background, Form, InputsForm } from "./styles";
+import { api } from "../../services/api";
 
 type Inputs = {
   nome: string;
@@ -16,22 +16,37 @@ type Inputs = {
 };
 
 export function SignUp() {
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm<Inputs>();
+
+  async function handleSignUp(data: Inputs){
+    navigate("/ocurrencies/pendents");
+
+    // const user = {
+    //   ...data,
+    //   data_criacao: "2020-10-10"
+    // }
+    // try {
+    //   const response = await api.post("/enterprises", user);
+    //   console.log(response);
+    //   navigate("/ocurrencies/pendents");
+    // } catch (error) {
+    //   if(error instanceof Error)
+    //     console.log(error);
+    // }
+  }
 
   return (
     <Container>
       <Background />
       <Form>
-        <InputsForm onSubmit={(e: FormEvent) => {
-          e.preventDefault(); 
-          location.href="/ocurrencies/pendents"
-        }}>
+        <InputsForm onSubmit={handleSubmit(handleSignUp)}>
           <h2>Cadastrar</h2>
           <Input
             icon={MdHome}
             required
             register={() => register("nome")}
-            placeholder="Unidade"
+            placeholder="Empresa"
           />
           <Input
             icon={MdMail}

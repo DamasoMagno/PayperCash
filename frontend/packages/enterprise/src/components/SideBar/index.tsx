@@ -25,12 +25,8 @@ export function SideBar() {
         </Link>
 
         <div className="profile">
-          <img
-            src={userProfileImage}
-            alt="User Image"
-            onClick={() => setModalEnterpriseIsOpen(true)}
-          />
-          <span>Giordano</span>
+          <p>Giordano</p>
+          <span>giordano221@gmail.com</span>
         </div>
       </User>
 

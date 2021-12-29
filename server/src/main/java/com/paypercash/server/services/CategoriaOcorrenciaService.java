@@ -1,5 +1,3 @@
 package com.paypercash.server.services;
 
-public class CategoriaOcorrenciaService {
-  
-}
+public class CategoriaOcorrenciaService {}

@@ -4,7 +4,7 @@ import { Container } from "./styles";
 type ItemProps = {
   router: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }
 
 export function Item({ router, title, subtitle }: ItemProps){

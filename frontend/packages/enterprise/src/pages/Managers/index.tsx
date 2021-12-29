@@ -1,6 +1,4 @@
-import { useEffect } from "react";
 import { MdPlace } from "react-icons/md";
-import { api } from "../../services/api";
 
 import { OcurrencyManagerProfile } from "../../components/Modals/OcurrenceManagerProfie";
 import { SideBar } from "../../components/SideBar";

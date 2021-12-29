@@ -30,6 +30,16 @@ export const Content = styled.div`
     }
   }
 
+    button.action {
+      margin: 0.5rem 0;
+      background: var(--primary-button);
+      color: var(--primary-color);
+      padding: 0.5rem;
+      font-size: 1rem;
+      float: right;
+      border-radius: .25rem;
+  }
+
   .locale {
     margin-top: 1rem;
     display: flex;
@@ -86,20 +96,5 @@ export const Divider = styled.div`
       border: 1px solid rgba(0, 255, 0, 0.5);
       color: #19ff05;
     }
-  }
-`;
-
-export const Buttons = styled.div`
-  margin: 1rem 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  button {
-    background-color: var(--button);
-    color: #fff;
-    border-radius: 0.25rem;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
   }
 `;

@@ -8,7 +8,7 @@ export const Container = styled.form`
 
   img {
     width: 100%;
-    border-radius: 25px;
+    border-radius: 10px;
     border: 3px solid rgba(85, 85, 85, 1);
     margin-bottom: 1rem;
   }

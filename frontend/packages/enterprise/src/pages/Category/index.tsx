@@ -1,3 +1,4 @@
+import { Field } from "components/Form/Field";
 import { Item } from "../../components/Item";
 import { SideBar } from "../../components/SideBar";
 
@@ -9,7 +10,9 @@ export function Category() {
       <SideBar />
 
       <Content>
-        <h3>Vírus</h3>
+        <header>
+          <h3>Vírus</h3>
+        </header>
 
         <Item 
           title="awd" 

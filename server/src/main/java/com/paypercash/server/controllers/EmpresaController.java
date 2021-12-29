@@ -2,6 +2,10 @@ package com.paypercash.server.controllers;
 
 import com.paypercash.server.models.Empresa;
 import com.paypercash.server.services.EmpresaService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import com.paypercash.server.repository.EmpresaRepository;
 
 import org.springframework.http.HttpStatus;
@@ -22,6 +26,7 @@ import java.util.List;
 
 @RequestMapping("/enterprises")
 @RestController
+@Api(value = "Empresa")
 public class EmpresaController {
 
   @Autowired
@@ -30,17 +35,19 @@ public class EmpresaController {
   private EmpresaService empresaServices;
 
   @GetMapping
+  @ApiOperation(value = "Lista todas as empresas")
   public List<Empresa> exibirEmpresas(){
     return empresaRepository.findAll();
   }
 
   @GetMapping("/{id}")
+  @ApiOperation(value = "Exibe uma determinada empresa, com base em seu id")
   public ResponseEntity<?> exibirEmpresa(@PathVariable Long id){
     try {
-      Empresa empresa = empresaRepository.findById(id).get();
+      Empresa empresa = empresaServices.obterEmpresaPeloId(id);
       return ResponseEntity.status(HttpStatus.OK).body(empresa);
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
   }
 
@@ -60,7 +67,7 @@ public class EmpresaController {
       empresaRepository.deleteById(id);
       return ResponseEntity.status(HttpStatus.GONE).body(null);
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Esta empresa, não foi enocntrada");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Esta empresa, não foi encontrada");
     }
   }
 
@@ -68,7 +75,6 @@ public class EmpresaController {
   public ResponseEntity<?> atualizarEmpresa(@RequestBody Empresa empresa, @PathVariable Long id){
     try {
       Empresa empresaAlterada = empresaServices.atualizarEmpresaDados(empresa, id);
-      empresaRepository.save(empresaAlterada);
       return ResponseEntity.status(HttpStatus.CREATED).body(empresaAlterada);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Não foi possivel, atualizar os dados");

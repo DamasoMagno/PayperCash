@@ -24,72 +24,64 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ocurrencies")
 public class OcorrenciaController {
-  
-  @Autowired
-  private OcorrenciaRepository ocorrenciaRepository;
-  @Autowired
-  private OcorrenciaService ocorrenciaService;
-  @Autowired
-  private TecnicoRepository tecnicoRepository;
 
-  @GetMapping
-  public List<Ocorrencia> listarOcorrencias(){
-    return ocorrenciaRepository.findAll();
-  }
+	@Autowired
+	private OcorrenciaRepository ocorrenciaRepository;
+	@Autowired
+	private OcorrenciaService ocorrenciaService;
 
-  @GetMapping("/{id}")
-  public ResponseEntity<?> obterOcorrencia(@PathVariable Long id){
-    try {
-      Ocorrencia ocorrenciaEncontrada = ocorrenciaService.obterOcorrencia(id);
-      return ResponseEntity.status(HttpStatus.FOUND).body(ocorrenciaEncontrada);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
-    }
-  }
+	@GetMapping
+	public List<Ocorrencia> listarOcorrencias(){
+		return ocorrenciaRepository.findAll();
+	}
 
-  @PostMapping("/{id}")
-  public ResponseEntity<?> criarOcorrencia(
-		  @RequestBody Ocorrencia ocorrencia, 
-		  @PathVariable Long id, 
-		  @RequestBody CategoriaOcorrencia categoriaOcorrencia
-	){ 
-    try {
-      Ocorrencia ocorrenciaCriada = ocorrenciaService.criarOcorrencia(ocorrencia, id);
-      return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaCriada);
-    } catch (Exception error){
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + error.getMessage());
-    }
-  }
+	@GetMapping("/{id}")
+	public ResponseEntity<?> obterOcorrencia(@PathVariable Long id){
+		try {
+			Ocorrencia ocorrenciaEncontrada = ocorrenciaService.obterOcorrencia(id);
+			return ResponseEntity.status(HttpStatus.FOUND).body(ocorrenciaEncontrada);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
+		}
+	}
 
-  @PutMapping("finalizar/{id}")
-  public ResponseEntity<?> finalizarOcorrencia(@PathVariable Long id, @RequestBody Ocorrencia ocorrencia){ 
-    try {
-      Ocorrencia ocorrenciaAtualizada = ocorrenciaService.finalizarOcorrencia(ocorrencia, id);
-      return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaAtualizada);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    }
-  }
+	@PostMapping("/{id}")
+	public ResponseEntity<?> criarOcorrencia( @RequestBody Ocorrencia ocorrencia, @PathVariable Long id){ 
+		try {
+			Ocorrencia ocorrenciaCriada = ocorrenciaService.criarOcorrencia(ocorrencia, id);
+			return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaCriada);
+		} catch (Exception error){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + error.getMessage());
+		}
+	}
 
-  @PutMapping("atender/{id}")
-  public ResponseEntity<?> prestarSuporteOcorrencia(@PathVariable Long id, @RequestBody Tecnico tecnico){
-    Ocorrencia ocorrenciaExiste = ocorrenciaService.obterOcorrencia(id);
-    
-    try {
-      if(tecnico.getEmail() != null){
-        Tecnico tecnicoEncontrado = tecnicoRepository.findByEmail(tecnico.getEmail());
-        ocorrenciaExiste.setTecnico(tecnicoEncontrado);
-      }
+	@PutMapping("finalizar/{id}")
+	public ResponseEntity<?> finalizarOcorrencia(@PathVariable Long id, @RequestBody Ocorrencia ocorrencia){ 
+		try {
+			Ocorrencia ocorrenciaAtualizada = ocorrenciaService.finalizarOcorrencia(ocorrencia, id);
+			return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaAtualizada);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro" + e.getMessage());
+		}
+	}
 
-      ocorrenciaRepository.save(ocorrenciaExiste);
-      return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaExiste);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    }
-  }
+	@PutMapping("atender/{id}")
+	public ResponseEntity<?> prestarSuporteOcorrencia(@PathVariable Long id, @RequestBody Tecnico tecnico){
+		try {
+			Ocorrencia ocorrenciaNaoPendente = ocorrenciaService.atenderOcorrencia(id, tecnico);
+			return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaNaoPendente);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
+		}
+	}
 
-  @DeleteMapping("/{id}")
-  public void removerOcorrencia(@PathVariable Long id){
-    ocorrenciaRepository.deleteById(id);
-  }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> removerOcorrencia(@PathVariable Long id){
+		try {
+			ocorrenciaRepository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.OK).body(null);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Nenhuma ocorrencia encontrada");
+		}
+	}
 }

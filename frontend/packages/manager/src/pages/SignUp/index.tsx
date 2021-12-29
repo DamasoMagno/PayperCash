@@ -1,15 +1,7 @@
-import { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import {
-  MdArrowLeft,
-  MdMail,
-  MdHome,
-  MdPlace,
-  MdContactPhone,
-  MdLock,
-  MdPhone,
-} from "react-icons/md";
+import { MdArrowLeft, MdMail, MdHome, MdPlace, MdLock } from "react-icons/md";
+import { api } from "../../services/api";
 
 import { Button } from "../../components/Form/Button";
 import { Input } from "../../components/Form/Input";
@@ -27,17 +19,23 @@ export function SignUp() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<Inputs>();
 
+  async function handleSignUp(data: Inputs) {
+    try {
+      const response = await api.post("/manager", data);
+      localStorage.setItem("@Id", JSON.stringify(response.data.id));
+      console.log(response);
+      navigate("/ocurrencies");
+    } catch (error) {
+      if (error instanceof Error) console.log(error.message);
+    }
+  }
+
   return (
     <div>
       <Container>
         <Background />
         <Form>
-          <form
-            onSubmit={(e: FormEvent) => {
-              e.preventDefault();
-              navigate("/ocurrencies");
-            }}
-          >
+          <form onSubmit={handleSubmit(handleSignUp)}>
             <h2>Cadastrar</h2>
             <Input
               icon={MdHome}

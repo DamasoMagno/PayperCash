@@ -16,19 +16,9 @@ export const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
-
-export const Content = styled.form`
-  h2 {
-    color: #fff;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
 
   > a {
-    margin-top: 2rem;
+    margin-top: 1rem;
     color: #fff;
 
     display: flex;
@@ -40,20 +30,30 @@ export const Content = styled.form`
   }
 `;
 
+export const InputsForm = styled.form`
+  h2 {
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+`;
+
 export const TypeAccount = styled.div`
   margin-top: 1rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: .5rem;
+`;
 
-  button {
+export const Type = styled.button<{ selecioned: boolean }>`
     padding: 0.5rem 1rem;
     color: #000;
     border-radius: 0.25rem;
-    background: rgba(255, 255, 255, 0.5);
+    background: ${({ selecioned }) => selecioned ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.5)"};
     border: 1px solid #fff;
     font-size: 1.25rem;
-  }
 `;
 
 export const Background = styled.section`

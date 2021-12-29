@@ -5,7 +5,7 @@ type NavigationProps = {
 };
 
 export const Containaer = styled.li<NavigationProps>`
-  background: ${({ isCurrentPage }) => isCurrentPage && "#eee"};
+  background: ${({ isCurrentPage }) => isCurrentPage && "#eef5db"};
   border-radius: ${({ isCurrentPage }) => isCurrentPage && ".10rem"};
   list-style: none;
   cursor: pointer;
@@ -26,5 +26,6 @@ export const Containaer = styled.li<NavigationProps>`
   a {
     color: #fff;
     font-size: 1.15rem;
+    font-weight: 600;
   }
 `;

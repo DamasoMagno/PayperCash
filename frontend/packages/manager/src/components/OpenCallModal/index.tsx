@@ -1,21 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactModal from "react-modal";
 
-import { useModal } from "../../hooks/useModal";
+import { useModal } from "../../hooks/useOcurrencies";
+import { api } from "../../services/api";
 
 import { Container, Field } from "./styles";
 
 type Ocurrency = {
-  title: string;
-  description: string;
+  titulo: string;
+  descricao: string;
 };
 
 export function OpenCallModal() {
   const { modalOpenCallIsOpen, setModalOpenCallIsOpen } = useModal();
-  const { register, watch } = useForm<Ocurrency>();
+  const { register, handleSubmit } = useForm<Ocurrency>();
 
   const [ hasContent, setHasContent ] = useState(false);
+
+  async function handleCreateNewOcurrency(data: Ocurrency){
+    const id = localStorage.getItem("@Id");
+    try {
+      const response = await api.post(`/ocurrencies/${id}`, { ...data, id: Math.random() ,data_criacao: "2020-10-10" });
+      console.log(response);
+    } catch (error) {
+      if(error instanceof Error)
+        console.log(error);
+    }
+  }
 
   return (
     <ReactModal
@@ -24,7 +36,7 @@ export function OpenCallModal() {
       overlayClassName="modalOverlay"
       className="modalContent"
     >
-      <Container>
+      <Container onSubmit={handleSubmit(handleCreateNewOcurrency)}>
         <h2>Cadastrar Ocorrência</h2>
 
         <div className="aboutOcurrency">
@@ -32,7 +44,7 @@ export function OpenCallModal() {
             <input
               id="title"
               placeholder=" "
-              {...register("title")}
+              {...register("titulo")}
               maxLength={80}
             />
             <label htmlFor="time">Título</label>
@@ -41,7 +53,7 @@ export function OpenCallModal() {
             <textarea
               id="description"
               placeholder=" "
-              {...register("description")}
+              {...register("descricao")}
             />
             <label htmlFor="description">Descrição </label>
           </Field>

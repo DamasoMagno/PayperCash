@@ -13,15 +13,25 @@ export const Container = styled.div`
     font-size: 0.85rem;
   }
 
-  div {
-    p {
-      padding: 0.5rem;
-      background-color: #eee;
-      color: #333;
-      font-weight: 500;
-      opacity: 1;
-      font-size: 1rem;
-      width: 100%;
+  > div {
+    background-color: #eee;
+
+    .contentInput {
+      display: flex;
+
+      p {
+        padding: 0.5rem;
+        color: #333;
+        font-weight: 500;
+        opacity: 1;
+        font-size: 1rem;
+        flex: 1;
+      }
+
+      button {
+        background: transparent;
+        padding: 0 .25rem;
+      }
     }
 
     span {

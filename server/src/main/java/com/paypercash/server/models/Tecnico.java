@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.paypercash.server.enums.Perfil;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,8 +38,15 @@ public class Tecnico implements Serializable {
 
 	private String senha;
 
+	private Perfil perfil = Perfil.TECNICO;
+	
 	@OneToMany(mappedBy = "tecnico", cascade = CascadeType.ALL)
 	private List<Ocorrencia> ocorrencias;
+	
+	
+	public Perfil getPerfil() {
+		return perfil;
+	}
 
 	public Long getId() {
 		return this.id;

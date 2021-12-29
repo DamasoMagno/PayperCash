@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -31,10 +33,11 @@ public class Empresa implements Serializable {
 	private String endereco;
 
 	private Date data_criacao;
-
+	
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
 	private List<Tecnico> tecnicos;
 
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
 	private List<GerenteOcorrencias> gerenteOcorrencias;
 

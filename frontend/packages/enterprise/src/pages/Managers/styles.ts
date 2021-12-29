@@ -29,7 +29,7 @@ export const Card = styled.div`
 
   img {
     width: 100%;
-    border-radius: 0.4rem;
+    border-radius: 0.25rem;
   }
 
   > div {

@@ -19,11 +19,12 @@ public class CategoriaOcorrencia implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String nome;
+	
 	@OneToMany(mappedBy = "categoriaOcorrencia", cascade = CascadeType.ALL)
 	private List<Ocorrencia> ocorrencia;
 
-	private String tipo_categoria;
-
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -32,15 +33,14 @@ public class CategoriaOcorrencia implements Serializable {
 		this.id = id;
 	}
 
-	public String getTipo_categoria() {
-		return this.tipo_categoria;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setTipo_categoria(String tipo_categoria) {
-		this.tipo_categoria = tipo_categoria;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
-	
 	public List<Ocorrencia> getOcorrencia() {
 		return ocorrencia;
 	}

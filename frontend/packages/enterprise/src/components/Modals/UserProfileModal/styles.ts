@@ -23,8 +23,8 @@ export const Container = styled.form`
       font-weight: 500;
 
       &.edit {
-        background-color: var(--button);
-        color: #fff;
+        background-color: var(--primary-button);
+        color: var(--primary-color);
       }
     }
   }

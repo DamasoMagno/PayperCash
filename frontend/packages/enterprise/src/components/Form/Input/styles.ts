@@ -19,7 +19,7 @@ export const Container = styled.div`
     margin: 0 .85rem;
     border-radius: 0.25rem;
     font-weight: 700;
-    background: #232129;
+    background: transparent;
     color: #fff;
 
     & + input {

@@ -37,6 +37,16 @@ public class Ocorrencia implements Serializable {
 	@JoinColumn( name = "categoria_ocorrencia_id" )
 	@JsonIgnore
 	private CategoriaOcorrencia categoriaOcorrencia;
+	
+	private String tipo_categoria;
+
+	public String getTipo_categoria() {
+		return tipo_categoria;
+	}
+
+	public void setTipo_categoria(String tipo_categoria) {
+		this.tipo_categoria = tipo_categoria;
+	}
 
 	private String titulo;
 

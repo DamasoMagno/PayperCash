@@ -1,12 +1,10 @@
-import { MdArrowLeft } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { MdEdit } from "react-icons/md";
 import { Options } from "../../components/Filters/Options";
 import { Field } from "../../components/Form/Field";
 import { Item } from "../../components/Item";
 import { SideBar } from "../../components/SideBar";
-import { Status } from "../../components/StatusOcurrencies";
 
-import { Container, Content } from "./styles";
+import { Container, Content, Status } from "./styles";
 
 export function Technician() {
   return (
@@ -14,37 +12,38 @@ export function Technician() {
       <SideBar />
 
       <Content>
-        <h1>Damaso Magno</h1>
+        <h1>Tecnico</h1>
+        <section className="user">
+          <Field label="Nome" value="Damaso Magno" canEdit />
+          <Field label="E-mai" value="limamdamaso@gmail.com" canEdit/>
+          <Field label="Senha" value="hbaddt15623" type="password" canEdit/>
+        </section>
 
-        <div className="userAbout">
-          <Field label="Nome" value="Damaso Magno" />
-          <Field label="E-mai" value="limamdamaso@gmail.com" />
-          <Field label="Senha" value="hbaddt15623" type="password" />
-        </div>
-
-        <div className="historico">
+        <section className="historicall">
           <div className="divisor">
             <h3>Histórico</h3>
             <span />
           </div>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className="resume">
             <Options />
-            <Status />
+            <div>
+              <Status className="finished">
+                <p>Concluidos</p>
+                <span />
+                <p>01</p>
+              </Status>
+              <Status className="pendents">
+                <p>Pendentes</p>
+                <span />
+                <p>0</p>
+              </Status>
+            </div>
           </div>
-
           <Item
             title="Monitor não  estava amostrando o display  ligado"
-            subtitle="Hoje de manhã, cheguei ao posto e notei que o monitor da sala de impressão não estava sando sinal de funcionamento."
             router="/ocurrency/pendent"
           />
-        </div>
+        </section>
       </Content>
     </Container>
   );

@@ -1,17 +1,18 @@
-import { ContextProvider } from "./hooks/useModal";
 import ReactModal from "react-modal";
 
 import { AppRoutes } from "./routes";
 
 import GlobalStyles from "./styles/global";
 
+import { AppProvider } from "./hooks/useOcurrencies";
+
 ReactModal.setAppElement("#root");
 
 export function App() {
   return (
-    <ContextProvider>
+    <AppProvider>
       <GlobalStyles />
       <AppRoutes />
-    </ContextProvider>
+    </AppProvider>
   );
 }

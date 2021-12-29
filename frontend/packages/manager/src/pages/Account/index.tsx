@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import {
   MdMail,
   MdPlace,
-  MdHome,
   MdContactPhone,
   MdArrowBack,
   MdLogout,
@@ -16,16 +15,19 @@ import { Input } from "../../components/Form/Input";
 import { Container, Buttons } from "./styles";
 
 import localization from "../../assets/localeMap.png";
+import { api } from "../../services/api";
+import { useContext } from "react";
+import { authContext } from "../../hooks/useOcurrencies";
 
 type User = {
-  unity: string;
-  name: string;
+  nome: string;
   email: string;
-  address: string;
-  contact: string;
+  senha: string;
+  endereco: string;
 };
 
 export function UserProfile() {
+  const { user } = useContext(authContext);
   const { register } = useForm<User>();
 
   return (
@@ -45,32 +47,26 @@ export function UserProfile() {
         <div className="locale">
           <img src={localization} alt="React Leaflet" />
         </div>
-
-        <Input
-          icon={MdHome}
-          value="Unidade Madalenas"
-          register={() => register("unity")}
-        />
-        <Input
-          icon={MdPeople}
-          value="Damaso Magno"
-          register={() => register("name")}
-        />
-        <Input
-          icon={MdPlace}
-          value="Ana Luiza Braga, 1881"
-          register={() => register("address")}
-        />
-        <Input
-          icon={MdMail}
-          value="damasomlima@gmail.com"
-          register={() => register("email")}
-        />
-        <Input
-          icon={MdContactPhone}
-          value="(88) 9 9601-8788"
-          register={() => register("contact")}
-        />
+          <Input
+            icon={MdPeople}
+            value={user.nome}
+            register={() => register("nome")}
+          />
+          <Input
+            icon={MdPlace}
+            value={user.endereco}
+            register={() => register("endereco")}
+          />
+          <Input
+            icon={MdMail}
+            value={user.email}
+            register={() => register("email")}
+          />
+          <Input
+            icon={MdContactPhone}
+            value={user.senha}
+            register={() => register("senha")}
+          />
 
         <button className="confirmChanges " type="submit">
           Confirmar Alterações

@@ -2,11 +2,9 @@
 
 import java.util.List;
 
-import com.paypercash.server.models.Empresa;
 import com.paypercash.server.models.GerenteOcorrencias;
-import com.paypercash.server.repository.EmpresaRepository;
 import com.paypercash.server.repository.GerenteOcorrenciasRepository;
-import com.paypercash.server.services.EmpresaService;
+import com.paypercash.server.services.GerenteOcorrenciasService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +25,7 @@ public class GerenteOcorrenciasController {
   @Autowired
   private GerenteOcorrenciasRepository gerenteOcorrenciasRepository;
   @Autowired
-  private EmpresaRepository empresaRepository;
+  private GerenteOcorrenciasService gerenteOcorrenciasServices;
 
   @GetMapping
   public List<GerenteOcorrencias> listarTodos(){
@@ -35,18 +33,20 @@ public class GerenteOcorrenciasController {
   }
 
   @GetMapping("/{id}")
-  public GerenteOcorrencias listarGerente(@PathVariable Long id){
-    return gerenteOcorrenciasRepository.findById(id).get();
+  public ResponseEntity<?> listarGerente(@PathVariable Long id){
+    try {
+    	GerenteOcorrencias gerenteEncontrado = gerenteOcorrenciasRepository.findById(id).get();
+    	return ResponseEntity.status(HttpStatus.FOUND).body(gerenteEncontrado);
+	} catch (Exception e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Nenhum gerente encontrado no sistema");
+	}
   }
-
+  
   @PostMapping
   public ResponseEntity<?> criarGerente( @RequestBody GerenteOcorrencias gerenteOcorrencias){
-    List<Empresa> empresas = empresaRepository.findAll();
-    System.out.print(empresas.get(0));
     try {
-      gerenteOcorrencias.setEmpresa(empresas.get(0));
-      GerenteOcorrencias gerente = gerenteOcorrenciasRepository.save(gerenteOcorrencias);
-      return ResponseEntity.status(HttpStatus.CREATED).body(gerente);
+      GerenteOcorrencias novoGerente = gerenteOcorrenciasServices.criarGerente(gerenteOcorrencias);
+      return ResponseEntity.status(HttpStatus.CREATED).body(novoGerente);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
     }
@@ -54,17 +54,15 @@ public class GerenteOcorrenciasController {
 
   @PutMapping("/{id}")
   public ResponseEntity<?> atualizarDados( @RequestBody GerenteOcorrencias gerenteOcorrencias, @PathVariable Long id){
-    GerenteOcorrencias gerente = gerenteOcorrenciasRepository.findById(id).get();
-    if(gerente == null){
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gerente nao encontrado");
-    }
-    gerente.setEmail(gerenteOcorrencias.getEmail());
-    gerente.setEndereco(gerenteOcorrencias.getEndereco());
-    gerente.setNome(gerenteOcorrencias.getNome());
-    gerenteOcorrenciasRepository.save(gerente);
-    return ResponseEntity.status(HttpStatus.GONE).body(gerente);
+    try {
+    	GerenteOcorrencias gerenteAtualizaado = gerenteOcorrenciasServices.atualizarGerente(gerenteOcorrencias, id);
+    	return ResponseEntity.status(HttpStatus.GONE).body(gerenteAtualizaado);
+	} catch (Exception e) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: Não foi possível atualizar esse gerente");
+	}
+    
   }
-
+  
   @DeleteMapping("/{id}")
   public ResponseEntity<?> apagarGerente(@PathVariable Long id){
     try {

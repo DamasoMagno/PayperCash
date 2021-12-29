@@ -9,7 +9,7 @@ export const Container = styled.aside`
   padding-top: 1rem;
 
   nav {
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
 `;
 
@@ -28,25 +28,15 @@ export const User = styled.div`
   }
 
   div.profile {
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
+    margin-top: 1.5rem; 
 
-    img {
-      width: 64px;
-      border-radius: 50%;
-      margin-right: 0.5rem;
-      cursor: pointer;
-      transition: filter 0.5s;
-
-      &:hover {
-        filter: brightness(0.8);
-      }
+    p {
+      font-size: 1.25rem;
+      color: #FFF;
     }
 
     span {
-      color: #fff;
-      font-size: 1.25rem;
+      color: rgba(255, 255, 255, .85);
     }
   }
 `;

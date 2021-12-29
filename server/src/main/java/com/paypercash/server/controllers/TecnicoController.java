@@ -24,46 +24,64 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/technicians")
 @RestController
 public class TecnicoController {
-	
-  @Autowired
-  private TecnicoRepository tecnicoRepository;
-  @Autowired
-  private EmpresaService empresaService;
-  @Autowired
-  private TecnicoService tecnicoService;
 
-  @GetMapping
-  public List<Tecnico> listaTecnicos(){
-	  return tecnicoRepository.findAll();
-  }
+	@Autowired
+	private TecnicoRepository tecnicoRepository;
+	@Autowired
+	private TecnicoService tecnicoService;
 
-  @GetMapping("/{id}")
-  public Tecnico obterTecnico(@PathVariable Long id){
-	  return tecnicoRepository.findById(id).get(); 
-  }
+	@GetMapping
+	public List<Tecnico> listaTecnicos(){
+		return tecnicoRepository.findAll();
+	}
 
-  @PostMapping("/{id}")
-  public ResponseEntity<?> criarTecnico(@PathVariable Long id, @RequestBody Tecnico tecnico){
-    Empresa empresa = empresaService.obterEmpresaPeloId(id);
-    tecnico.setEmpresa(empresa);
-    Tecnico tec = tecnicoRepository.save(tecnico); 
-    return ResponseEntity.status(HttpStatus.CREATED).body(tec);
-  }
+	@GetMapping("/{id}")
+	public ResponseEntity<?> obterTecnico(@PathVariable Long id){
+		try {
+			Tecnico tecnicoEncontrado = tecnicoService.obterTecnicoPeloId(id);
+			return ResponseEntity.status(HttpStatus.OK).body(tecnicoEncontrado);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Não foi possivel encontrar este tecnico");
+		} 
+	}
 
-  @DeleteMapping("/{id}")
-  public void apagarTecnico(@PathVariable Long id){
-    tecnicoRepository.deleteById(id);
-  }
+	@PostMapping("/{id}")
+	public ResponseEntity<?> criarTecnico(@PathVariable Long id, @RequestBody Tecnico tecnico){
+		try {
+			Tecnico novoTecnico = tecnicoService.criarTecnico(tecnico, id); 
+			return ResponseEntity.status(HttpStatus.CREATED).body(novoTecnico);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: Não foi possível cadastrar o tecnico");
+		}
+	}
 
-  @PutMapping
-  public ResponseEntity<?> atualizarInformacoes(@RequestBody Tecnico tecnico){
-    try {
-      Tecnico novoTecnico = tecnicoService.atualizarTecnico(tecnico);
-      Tecnico novosDados = tecnicoRepository.save(novoTecnico);
-      return ResponseEntity.status(HttpStatus.CREATED).body(novosDados);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("awdwd");
-    }
-  }
+	@PostMapping("/autenticar")
+	public ResponseEntity<?> fazerAutenticacao(@RequestBody Tecnico tecnico){
+		Tecnico encontrado = tecnicoRepository.findByEmail(tecnico.getEmail());
+		if(encontrado != null && encontrado.getSenha().equals(tecnico.getSenha())) {
+			return ResponseEntity.status(HttpStatus.OK).body(encontrado);
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Credenciais incorretas");
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> apagarTecnico(@PathVariable Long id){
+		try {
+			tecnicoRepository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.OK).body(null);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Não foi possivel remover o tecnico do banco");
+		}
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<?> atualizarInformacoes(@RequestBody Tecnico tecnico, @PathVariable Long id){
+		try {
+			Tecnico novoTecnico = tecnicoService.atualizarTecnico(tecnico, id);
+			return ResponseEntity.status(HttpStatus.CREATED).body(novoTecnico);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("awdwd");
+		}
+	}
 
 }

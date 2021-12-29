@@ -20,8 +20,10 @@ export default createGlobalStyle`
   }
 
   :root {
-    --background: #312E38;
-    --button: #333333;  
+    --background: #2f2f2f;
+    --primary-button: #333333;
+    --second-button: #eee;  
+    --primary-color: #fff;
   }
 
   html {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 
-import { Item } from "../../components/Item";
+import { Item as Category } from "../../components/Item";
 import { SideBar } from "../../components/SideBar";
 
 import { Container, Content, Historic, NewCategory } from "./styles";
@@ -21,8 +21,11 @@ export function Categories() {
       <Content>
         <NewCategory>
           <div>
-            <label>Nova Categoria</label>
-            <input onChange={(e) => setNewCategory(e.target.value)} />
+            <label htmlFor="newCategory">Nova Categoria</label>
+            <input
+              id="newCategory"
+              onChange={(e) => setNewCategory(e.target.value)}
+            />
           </div>
           <button onClick={handleAddNewCategory}>
             <MdAdd color="#FFF" size={24} />
@@ -33,7 +36,7 @@ export function Categories() {
           <h2>Categorias</h2>
 
           {categories.map((category) => (
-            <Item
+            <Category
               key={category}
               title={category}
               router="/category"
