@@ -5,6 +5,8 @@ import com.paypercash.server.services.EmpresaService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import com.paypercash.server.repository.EmpresaRepository;
 
@@ -35,13 +37,17 @@ public class EmpresaController {
   private EmpresaService empresaServices;
 
   @GetMapping
-  @ApiOperation(value = "Lista todas as empresas")
+  @ApiOperation(value = "Essa rota, tem a função de exibir toda(s) a(s) emprsa(s) registradas no sistema")
   public List<Empresa> exibirEmpresas(){
     return empresaRepository.findAll();
   }
 
   @GetMapping("/{id}")
   @ApiOperation(value = "Exibe uma determinada empresa, com base em seu id")
+  @ApiResponses(value = {
+		  @ApiResponse(code = 200, message="Empresa encontrada"),
+		  @ApiResponse(code=404, message="Nenhuma empresa, encontrada no sistema")
+  })
   public ResponseEntity<?> exibirEmpresa(@PathVariable Long id){
     try {
       Empresa empresa = empresaServices.obterEmpresaPeloId(id);
@@ -52,6 +58,11 @@ public class EmpresaController {
   }
 
   @PostMapping
+  @ApiOperation(value="Essa rota, tem como função, realizar o cadastro da empresa no sistema")
+  @ApiResponses(value= {
+		  @ApiResponse(code=201, message = "Empresa Criada com Sucesso"),
+		  @ApiResponse(code=404, message = "Empresa, já está cadastrada no sistema"),
+  })
   public ResponseEntity<?> criarEmpresa(@RequestBody Empresa empresa){
     try {
       Empresa empresaCriada = empresaServices.criarEmpresa(empresa); 
@@ -62,6 +73,10 @@ public class EmpresaController {
   }  
 
   @DeleteMapping("/{id}")
+  @ApiOperation(value="Esta rota, tem a função de remover do sistema, a empresa cadastrada nele")
+  @ApiResponses(value = {
+		  @ApiResponse(code = 410, message = "Empresa removida, com sucesso")
+  })
   public ResponseEntity<?> apagarEmpresa(@PathVariable Long id){
     try {
       empresaRepository.deleteById(id);
@@ -72,6 +87,7 @@ public class EmpresaController {
   }
 
   @PutMapping("/{id}")
+  @ApiOperation(value="Esta rota, tem a função de realizar a atualizção dos dados cadastradosa respeito da empresa")
   public ResponseEntity<?> atualizarEmpresa(@RequestBody Empresa empresa, @PathVariable Long id){
     try {
       Empresa empresaAlterada = empresaServices.atualizarEmpresaDados(empresa, id);

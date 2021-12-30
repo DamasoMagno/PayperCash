@@ -5,15 +5,18 @@ import java.sql.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Empresa implements Serializable {
@@ -31,15 +34,15 @@ public class Empresa implements Serializable {
 	private String senha;
 
 	private String endereco;
-
+	
 	private Date data_criacao;
 	
-	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-	private List<Tecnico> tecnicos;
-
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Tecnico> tecnicos;
+ 
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-	private List<GerenteOcorrencias> gerenteOcorrencias;
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<GerenteOcorrencias> gerenteOcorrencias;
 
 	public Long getId() {
 		return this.id;
@@ -85,11 +88,11 @@ public class Empresa implements Serializable {
 		this.data_criacao = data_criacao;
 	}
 
-	public List<Tecnico> getTecnicos() {
+	public Set<Tecnico> getTecnicos() {
 		return this.tecnicos;
 	}
 
-	public List<GerenteOcorrencias> getGerenteOcorrencias() {
+	public Set<GerenteOcorrencias> getGerenteOcorrencias() {
 		return this.gerenteOcorrencias;
 	}
 

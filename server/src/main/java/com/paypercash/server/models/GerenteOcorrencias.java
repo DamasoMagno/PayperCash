@@ -3,6 +3,7 @@ package com.paypercash.server.models;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -34,15 +35,14 @@ public class GerenteOcorrencias implements Serializable {
 
 	private String endereco;
 
-	@OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL)
-	private List<Ocorrencia> ocorrencias;
+	@OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Ocorrencia> ocorrencias;
 	
 	private Perfil perfil = Perfil.GERENTE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
-	
 	private Empresa empresa;
 
 	
@@ -98,7 +98,7 @@ public class GerenteOcorrencias implements Serializable {
 		this.endereco = endereco;
 	}
 
-	public List<Ocorrencia> getOcorrencias() {
+	public Set<Ocorrencia> getOcorrencias() {
 		return this.ocorrencias;
 	}
 

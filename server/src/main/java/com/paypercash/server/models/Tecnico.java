@@ -17,6 +17,7 @@ import com.paypercash.server.enums.Perfil;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Tecnico implements Serializable {
@@ -40,8 +41,8 @@ public class Tecnico implements Serializable {
 
 	private Perfil perfil = Perfil.TECNICO;
 	
-	@OneToMany(mappedBy = "tecnico", cascade = CascadeType.ALL)
-	private List<Ocorrencia> ocorrencias;
+	@OneToMany(mappedBy = "tecnico", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Ocorrencia> ocorrencias;
 	
 	
 	public Perfil getPerfil() {
@@ -88,11 +89,11 @@ public class Tecnico implements Serializable {
 		this.senha = senha;
 	}
 
-	public List<Ocorrencia> getOcorrencias() {
+	public Set<Ocorrencia> getOcorrencias() {
 		return this.ocorrencias;
 	}
 
-	public void setOcorrencias(List<Ocorrencia> ocorrencias) {
+	public void setOcorrencias(Set<Ocorrencia> ocorrencias) {
 		this.ocorrencias = ocorrencias;
 	}
 

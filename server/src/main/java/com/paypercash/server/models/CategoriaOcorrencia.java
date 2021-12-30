@@ -2,6 +2,7 @@ package com.paypercash.server.models;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class CategoriaOcorrencia implements Serializable {
@@ -21,8 +23,8 @@ public class CategoriaOcorrencia implements Serializable {
 
 	private String nome;
 	
-	@OneToMany(mappedBy = "categoriaOcorrencia", cascade = CascadeType.ALL)
-	private List<Ocorrencia> ocorrencia;
+	@OneToMany(mappedBy = "categoriaOcorrencia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Ocorrencia> ocorrencia;
 
 	
 	public Long getId() {
@@ -41,11 +43,11 @@ public class CategoriaOcorrencia implements Serializable {
 		this.nome = nome;
 	}
 
-	public List<Ocorrencia> getOcorrencia() {
+	public Set<Ocorrencia> getOcorrencia() {
 		return ocorrencia;
 	}
 
-	public void setOcorrencia(List<Ocorrencia> ocorrencia) {
+	public void setOcorrencia(Set<Ocorrencia> ocorrencia) {
 		this.ocorrencia = ocorrencia;
 	}
 
