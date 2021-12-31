@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import com.paypercash.server.repository.EmpresaRepository;
+import com.paypercash.server.security.JwtUtil;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/enterprises")
+@RequestMapping("/empresas")
 @RestController
 @Api(value = "Empresa")
 public class EmpresaController {
@@ -36,21 +38,22 @@ public class EmpresaController {
   @Autowired
   private EmpresaService empresaServices;
 
-  @GetMapping
+  @GetMapping("/todas")
   @ApiOperation(value = "Essa rota, tem a função de exibir toda(s) a(s) emprsa(s) registradas no sistema")
   public List<Empresa> exibirEmpresas(){
     return empresaRepository.findAll();
   }
 
-  @GetMapping("/{id}")
+  @GetMapping
   @ApiOperation(value = "Exibe uma determinada empresa, com base em seu id")
   @ApiResponses(value = {
 		  @ApiResponse(code = 200, message="Empresa encontrada"),
 		  @ApiResponse(code=404, message="Nenhuma empresa, encontrada no sistema")
   })
-  public ResponseEntity<?> exibirEmpresa(@PathVariable Long id){
+  public ResponseEntity<?> exibirEmpresa(@RequestHeader String token){
     try {
-      Empresa empresa = empresaServices.obterEmpresaPeloId(id);
+    Long userId = Long.parseLong(JwtUtil.decodeJWT(token).getSubject());
+      Empresa empresa = empresaServices.obterEmpresaPeloId(userId);
       return ResponseEntity.status(HttpStatus.OK).body(empresa);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -71,6 +74,16 @@ public class EmpresaController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
     }
   }  
+  
+  @PostMapping("/login")
+  public ResponseEntity<?> autenticar(@RequestBody Empresa empresa){
+	  try {
+		String autenticacaoFeitaComSucesso = empresaServices.autenticar(empresa);
+		return ResponseEntity.status(HttpStatus.CREATED).body(autenticacaoFeitaComSucesso);
+	} catch (Exception e) {
+		return new ResponseEntity<>("Erro: " + e.getMessage(), HttpStatus.NOT_FOUND);
+	}
+  }
 
   @DeleteMapping("/{id}")
   @ApiOperation(value="Esta rota, tem a função de remover do sistema, a empresa cadastrada nele")

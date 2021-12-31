@@ -1,9 +1,10 @@
 package com.paypercash.server.models;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,10 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -35,15 +37,22 @@ public class Empresa implements Serializable {
 
 	private String endereco;
 	
-	private Date data_criacao;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "PERFIS")
+	private Set<Integer> perfis;
+	
+	private Date data_criacao = new Date();
 	
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Tecnico> tecnicos;
+	
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Ocorrencia> ocorrencias;
  
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<GerenteOcorrencias> gerenteOcorrencias;
-
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -64,10 +73,12 @@ public class Empresa implements Serializable {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public String getSenha() {
 		return this.senha;
 	}
 
+	@JsonProperty
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
@@ -84,16 +95,16 @@ public class Empresa implements Serializable {
 		return this.data_criacao;
 	}
 
-	public void setData_criacao(Date data_criacao) {
-		this.data_criacao = data_criacao;
-	}
-
 	public Set<Tecnico> getTecnicos() {
 		return this.tecnicos;
 	}
 
 	public Set<GerenteOcorrencias> getGerenteOcorrencias() {
 		return this.gerenteOcorrencias;
+	}
+	
+	public Set<Ocorrencia> getOcorrencias(){
+		return this.ocorrencias;
 	}
 
 	@Override
@@ -112,6 +123,7 @@ public class Empresa implements Serializable {
 		Empresa other = (Empresa) obj;
 		return Objects.equals(id, other.id);
 	}
+
 
   
 }

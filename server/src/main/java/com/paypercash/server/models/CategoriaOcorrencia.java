@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 

@@ -2,11 +2,9 @@ package com.paypercash.server.controllers;
 
 import java.util.List;
 
-import com.paypercash.server.models.CategoriaOcorrencia;
 import com.paypercash.server.models.Ocorrencia;
 import com.paypercash.server.models.Tecnico;
 import com.paypercash.server.repository.OcorrenciaRepository;
-import com.paypercash.server.repository.TecnicoRepository;
 import com.paypercash.server.services.OcorrenciaService;
 
 import org.springframework.beans.factory.annotation.Autowired;

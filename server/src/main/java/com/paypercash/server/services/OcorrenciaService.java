@@ -1,13 +1,16 @@
 package com.paypercash.server.services;
 
-import com.paypercash.server.models.CategoriaOcorrencia;
+import com.paypercash.server.models.CategoriaOcorrencia;import com.paypercash.server.models.Empresa;
 import com.paypercash.server.models.GerenteOcorrencias;
 import com.paypercash.server.models.Ocorrencia;
 import com.paypercash.server.models.Tecnico;
 import com.paypercash.server.repository.CategoriaOcorrenciaRepository;
+import com.paypercash.server.repository.EmpresaRepository;
 import com.paypercash.server.repository.GerenteOcorrenciasRepository;
 import com.paypercash.server.repository.OcorrenciaRepository;
 import com.paypercash.server.repository.TecnicoRepository;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,8 @@ public class OcorrenciaService {
 	private CategoriaOcorrenciaRepository categoriaOcorrenciaRepository;
 	@Autowired
 	private TecnicoRepository tecnicoRepository;
+	@Autowired
+	private EmpresaRepository empresaRepository;
 	
 	public Ocorrencia obterOcorrencia(Long id){
 		Ocorrencia ocorrenciaJaExiste = ocorrenciaRepository.findById(id).orElse(null);
@@ -53,20 +58,17 @@ public class OcorrenciaService {
 	}
 
 	public Ocorrencia criarOcorrencia(Ocorrencia ocorrencia, Long id){
-		Ocorrencia ocorrenciJaExiste = obterOcorrencia(ocorrencia.getId());
-		CategoriaOcorrencia categoriaEncontrada = categoriaOcorrenciaRepository.findByNome(ocorrencia.getTipo_categoria());
-
-		if(ocorrenciJaExiste != null){
-			throw new Error("Esta ocorrencia, já está cadastrada no sitema");
-		}
-
-		GerenteOcorrencias gerenteOcorrenciasEcontrando = gerenteOcorrenciasRepository.findById(id).get();
+		Ocorrencia ocorrenciaJaExiste = ocorrenciaRepository.findByDataCriacao(ocorrencia.getDataCriacao());
 		
+		System.out.println(ocorrenciaJaExiste != null);
+		
+		CategoriaOcorrencia categoriaEncontrada = categoriaOcorrenciaRepository.findByNome(ocorrencia.getTipo_categoria());
+		List<Empresa> empresaEncontrada = empresaRepository.findAll();
+		GerenteOcorrencias gerenteOcorrenciasEcontrando = gerenteOcorrenciasRepository.findById(id).get();
 		ocorrencia.setGerenteOcorrencias(gerenteOcorrenciasEcontrando);
 		ocorrencia.setCategoriaOcorrencia(categoriaEncontrada);
-
+		ocorrencia.setEmpresa(empresaEncontrada.get(0));
 		Ocorrencia ocorrenciaCriada = ocorrenciaRepository.save(ocorrencia);
-
 		return ocorrenciaCriada;
 	}
 

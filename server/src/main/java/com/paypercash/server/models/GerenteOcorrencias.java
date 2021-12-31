@@ -1,7 +1,7 @@
 package com.paypercash.server.models;
 
 import java.io.Serializable;
-import java.util.List;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.paypercash.server.enums.Perfil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class GerenteOcorrencias implements Serializable {
@@ -38,18 +38,11 @@ public class GerenteOcorrencias implements Serializable {
 	@OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Ocorrencia> ocorrencias;
 	
-	private Perfil perfil = Perfil.GERENTE;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
 	private Empresa empresa;
 
-	
-	public Perfil getPerfil() {
-		return perfil;
-	}
-	
 	public Long getId() {
 		return this.id;
 	}
@@ -82,10 +75,12 @@ public class GerenteOcorrencias implements Serializable {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public String getSenha() {
 		return this.senha;
 	}
 
+	@JsonProperty
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}

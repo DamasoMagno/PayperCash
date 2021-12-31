@@ -3,10 +3,8 @@ package com.paypercash.server.controllers;
 import java.util.List;
 
 import com.paypercash.server.models.Tecnico;
-import com.paypercash.server.models.Empresa;
 
 import com.paypercash.server.repository.TecnicoRepository;
-import com.paypercash.server.services.EmpresaService;
 import com.paypercash.server.services.TecnicoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,23 +43,24 @@ public class TecnicoController {
 		} 
 	}
 
-	@PostMapping("/{id}")
+	@PostMapping
 	public ResponseEntity<?> criarTecnico(@PathVariable Long id, @RequestBody Tecnico tecnico){
 		try {
 			Tecnico novoTecnico = tecnicoService.criarTecnico(tecnico, id); 
 			return ResponseEntity.status(HttpStatus.CREATED).body(novoTecnico);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: Não foi possível cadastrar o tecnico");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: " + e.getMessage());
 		}
 	}
 
-	@PostMapping("/autenticar")
+	@PostMapping("/login")
 	public ResponseEntity<?> fazerAutenticacao(@RequestBody Tecnico tecnico){
-		Tecnico encontrado = tecnicoRepository.findByEmail(tecnico.getEmail());
-		if(encontrado != null && encontrado.getSenha().equals(tecnico.getSenha())) {
-			return ResponseEntity.status(HttpStatus.OK).body(encontrado);
+		try {
+			String autenticacaoFeitaComSucesso = tecnicoService.autenticar(tecnico);
+			return ResponseEntity.status(HttpStatus.CREATED).body(autenticacaoFeitaComSucesso);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Erro: " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Credenciais incorretas");
 	}
 
 	@DeleteMapping("/{id}")

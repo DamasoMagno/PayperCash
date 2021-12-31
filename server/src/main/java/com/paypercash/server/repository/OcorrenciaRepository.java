@@ -2,6 +2,12 @@ package com.paypercash.server.repository;
 
 import com.paypercash.server.models.Ocorrencia;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Date;
 
-public interface OcorrenciaRepository extends JpaRepository<Ocorrencia, Long> {}
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface OcorrenciaRepository extends JpaRepository<Ocorrencia, Long> {
+	public Ocorrencia findByDataCriacao(Date dataCriacao);
+}

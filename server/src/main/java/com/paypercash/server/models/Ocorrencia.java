@@ -1,7 +1,8 @@
 package com.paypercash.server.models;
 
 import java.io.Serializable;
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -27,6 +28,11 @@ public class Ocorrencia implements Serializable {
 	@JoinColumn(name = "gerente_ocorrencia_id")
 	@JsonIgnore
 	private GerenteOcorrencias gerenteOcorrencias;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "empresa_id")
+	@JsonIgnore
+	private Empresa empresa;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tecnico_id")
@@ -47,6 +53,10 @@ public class Ocorrencia implements Serializable {
 	public void setTipo_categoria(String tipo_categoria) {
 		this.tipo_categoria = tipo_categoria;
 	}
+	
+	public Empresa setEmpresa(Empresa empresa) {
+		return this.empresa = empresa;
+	}
 
 	private String titulo;
 
@@ -54,7 +64,7 @@ public class Ocorrencia implements Serializable {
 
 	private String resolucao;
 
-	private Date data_criacao;
+	private Date dataCriacao = new Date();
 
 	public Long getId() {
 		return this.id;
@@ -88,12 +98,8 @@ public class Ocorrencia implements Serializable {
 		this.resolucao = resolucao;
 	}
 
-	public Date getData_criacao() {
-		return this.data_criacao;
-	}
-
-	public void setData_criacao(Date data_criacao) {
-		this.data_criacao = data_criacao;
+	public Date getDataCriacao() {
+		return this.dataCriacao;
 	}
 
 	public GerenteOcorrencias getGerenteOcorrencias() {
