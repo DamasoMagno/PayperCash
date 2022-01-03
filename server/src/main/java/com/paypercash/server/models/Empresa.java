@@ -1,10 +1,9 @@
 package com.paypercash.server.models;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,11 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.paypercash.server.enums.Perfil;
 
-import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,30 +29,29 @@ public class Empresa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String nome; 
+	private String nome;
 
 	private String email;
 
 	private String senha;
 
 	private String endereco;
+
+	private Perfil perfil = Perfil.EMPRESA;
 	
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "PERFIS")
-	private Set<Integer> perfis;
-	
-	private Date data_criacao = new Date();
-	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dataCriacao = LocalDateTime.now();
+
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Tecnico> tecnicos;
-	
+
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Ocorrencia> ocorrencias;
- 
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<GerenteOcorrencias> gerenteOcorrencias;
-	
+
 	public Long getId() {
 		return this.id;
 	}
@@ -91,10 +90,6 @@ public class Empresa implements Serializable {
 		this.endereco = endereco;
 	}
 
-	public Date getData_criacao() {
-		return this.data_criacao;
-	}
-
 	public Set<Tecnico> getTecnicos() {
 		return this.tecnicos;
 	}
@@ -102,9 +97,13 @@ public class Empresa implements Serializable {
 	public Set<GerenteOcorrencias> getGerenteOcorrencias() {
 		return this.gerenteOcorrencias;
 	}
-	
-	public Set<Ocorrencia> getOcorrencias(){
+
+	public Set<Ocorrencia> getOcorrencias() {
 		return this.ocorrencias;
+	}
+
+	public Perfil getPerfil() {
+		return perfil;
 	}
 
 	@Override
@@ -124,6 +123,4 @@ public class Empresa implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-
-  
 }

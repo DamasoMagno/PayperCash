@@ -5,4 +5,4 @@ import com.paypercash.server.models.Tecnico;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TecnicoRepository extends SecurityRepository<Tecnico>{}
+public interface TecnicoRepository extends TipoUsuarioRepository<Tecnico>{}

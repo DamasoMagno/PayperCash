@@ -5,4 +5,4 @@ import com.paypercash.server.models.GerenteOcorrencias;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GerenteOcorrenciasRepository extends SecurityRepository<GerenteOcorrencias>{}
+public interface GerenteOcorrenciasRepository extends TipoUsuarioRepository<GerenteOcorrencias>{}

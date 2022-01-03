@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.paypercash.server.enums.Perfil;
 
 import java.util.Objects;
 import java.util.Set;
@@ -38,6 +39,8 @@ public class Tecnico implements Serializable {
 
 	private String senha;
 	
+	private Perfil perfil = Perfil.TECNICO;
+
 	@OneToMany(mappedBy = "tecnico", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Ocorrencia> ocorrencias;
 
@@ -91,6 +94,10 @@ public class Tecnico implements Serializable {
 		this.ocorrencias = ocorrencias;
 	}
 
+	public Perfil getPerfil() {
+		return perfil;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -106,7 +113,6 @@ public class Tecnico implements Serializable {
 			return false;
 		Tecnico other = (Tecnico) obj;
 		return Objects.equals(id, other.id);
-	}  
-
+	}
 
 }

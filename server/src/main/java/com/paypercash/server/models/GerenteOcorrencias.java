@@ -17,10 +17,11 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.paypercash.server.enums.Perfil;
 
 @Entity
 public class GerenteOcorrencias implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -34,10 +35,12 @@ public class GerenteOcorrencias implements Serializable {
 	private String senha;
 
 	private String endereco;
+	
+	private Perfil perfil = Perfil.GERENTE;
 
 	@OneToMany(mappedBy = "gerenteOcorrencias", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Ocorrencia> ocorrencias;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
@@ -97,6 +100,10 @@ public class GerenteOcorrencias implements Serializable {
 		return this.ocorrencias;
 	}
 
+	public Perfil getPerfil() {
+		return perfil;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -113,6 +120,5 @@ public class GerenteOcorrencias implements Serializable {
 		GerenteOcorrencias other = (GerenteOcorrencias) obj;
 		return Objects.equals(id, other.id);
 	}
-
 
 }

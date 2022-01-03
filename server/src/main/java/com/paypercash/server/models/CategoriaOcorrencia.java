@@ -21,11 +21,10 @@ public class CategoriaOcorrencia implements Serializable {
 	private Long id;
 
 	private String nome;
-	
+
 	@OneToMany(mappedBy = "categoriaOcorrencia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Ocorrencia> ocorrencia;
 
-	
 	public Long getId() {
 		return this.id;
 	}
@@ -66,7 +65,5 @@ public class CategoriaOcorrencia implements Serializable {
 		CategoriaOcorrencia other = (CategoriaOcorrencia) obj;
 		return Objects.equals(id, other.id);
 	}
-
-
 
 }

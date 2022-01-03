@@ -1,8 +1,7 @@
 package com.paypercash.server.models;
 
 import java.io.Serializable;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -13,7 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.paypercash.server.enums.OcurrencyStatus;
 
 @Entity
 public class Ocorrencia implements Serializable {
@@ -28,7 +29,7 @@ public class Ocorrencia implements Serializable {
 	@JoinColumn(name = "gerente_ocorrencia_id")
 	@JsonIgnore
 	private GerenteOcorrencias gerenteOcorrencias;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
@@ -40,23 +41,11 @@ public class Ocorrencia implements Serializable {
 	private Tecnico tecnico;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn( name = "categoria_ocorrencia_id" )
+	@JoinColumn(name = "categoria_ocorrencia_id")
 	@JsonIgnore
 	private CategoriaOcorrencia categoriaOcorrencia;
-	
+
 	private String tipo_categoria;
-
-	public String getTipo_categoria() {
-		return tipo_categoria;
-	}
-
-	public void setTipo_categoria(String tipo_categoria) {
-		this.tipo_categoria = tipo_categoria;
-	}
-	
-	public Empresa setEmpresa(Empresa empresa) {
-		return this.empresa = empresa;
-	}
 
 	private String titulo;
 
@@ -64,7 +53,10 @@ public class Ocorrencia implements Serializable {
 
 	private String resolucao;
 
-	private Date dataCriacao = new Date();
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dataCriacao = LocalDateTime.now();
+	
+	private OcurrencyStatus status = OcurrencyStatus.PEDENTE;
 
 	public Long getId() {
 		return this.id;
@@ -97,11 +89,7 @@ public class Ocorrencia implements Serializable {
 	public void setResolucao(String resolucao) {
 		this.resolucao = resolucao;
 	}
-
-	public Date getDataCriacao() {
-		return this.dataCriacao;
-	}
-
+	
 	public GerenteOcorrencias getGerenteOcorrencias() {
 		return this.gerenteOcorrencias;
 	}
@@ -126,6 +114,30 @@ public class Ocorrencia implements Serializable {
 		this.categoriaOcorrencia = categoriaOcorrencia;
 	}
 
+	public OcurrencyStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OcurrencyStatus status) {
+		this.status = status;
+	}
+	
+	public String getTipo_categoria() {
+		return tipo_categoria;
+	}
+
+	public void setTipo_categoria(String tipo_categoria) {
+		this.tipo_categoria = tipo_categoria;
+	}
+
+	public Empresa setEmpresa(Empresa empresa) {
+		return this.empresa = empresa;
+	}
+
+	public LocalDateTime getDataCriacao() {
+		return dataCriacao;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -141,7 +153,6 @@ public class Ocorrencia implements Serializable {
 			return false;
 		Ocorrencia other = (Ocorrencia) obj;
 		return Objects.equals(id, other.id);
-	}    
-
+	}
 
 }
