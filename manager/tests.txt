@@ -1,3 +1,24 @@
+const ocurrenciesForTests = [
+    { id: 1, hour: "8:30", title: "Notebook não está ligando", period: "Hoje" },
+    {
+      id: 2,
+      hour: "10:25",
+      title: "Servidor, está bloqueando o acesso aos sites",
+      period: "Ontem",
+    },
+    { id: 3, hour: "9:30", title: "Tal problema", period: "Hoje" },
+  ];
+
+const ocurrenciesByPeriod: any = [];
+  for (const ocurrency of ocurrenciesForTests) {
+    const index = ocurrenciesByPeriod[ocurrency.period];
+    if (!index) {
+      ocurrenciesByPeriod[ocurrency.period] = [];
+    }
+    ocurrenciesByPeriod[ocurrency.period].push(ocurrency);
+  }
+
+
 {Object.keys(ocurrenciesByPeriod).map((ocurrency: any) => (
             <div className="period" key={ocurrency.id}>
               <p>{ocurrency}</p>

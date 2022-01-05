@@ -1,27 +1,23 @@
 import { FormEvent, useState } from "react";
 import { FiMail, FiLock } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { MdArrowRight, MdArrowRightAlt } from "react-icons/md";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import { Input } from "../../components/Form/Input";
-
-import {
-  Container,
-  Background,
-  Form,
-  TypeAccount,
-  InputsForm,
-  Type, 
-} from "./styles";
-import { Link } from "react-router-dom";
-import { MdArrowRight, MdArrowRightAlt } from "react-icons/md";
 import { Button } from "../../components/Form/Button";
+
+import { Container, Background, Form, TypeAccount, InputsForm, Type } from "./styles";
 
 export function SignIn() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
   const [accountSelecioned, setAccountSelecioned] = useState("Tecnico");
+
+  async function handleSignUser(data: any){
+    console.log(data);
+  }
 
   return (
     <div>

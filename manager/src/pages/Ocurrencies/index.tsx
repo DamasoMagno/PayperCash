@@ -1,35 +1,62 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { MdArrowRight, MdPeople } from "react-icons/md";
+import { api } from "../../services/api";
+import { useModal } from "../../hooks/useOcurrencies";
+import { Ocurrency as OcurrencyType } from "../../interfaces";
+import { useCookies } from "react-cookie";
+
+import { FormatOcurrencies } from "../../utils/FormOcurrencies";
 
 import { OpenCallModal } from "../../components/OpenCallModal";
 import { Header } from "../../components/Header";
-import { useModal } from "../../hooks/useOcurrencies";
 
-import { Content, Buttons, HistoricCalls, Ocurrency, RecentCall,} from "./styles";
+import { Content, Buttons, HistoricCalls, Ocurrency, RecentCall } from "./styles";
 
 import horarioImage from "../../assets/horario.png";
 import callImage from "../../assets/call.png";
 
+type OcurrencyFormated = Pick<OcurrencyType, "id" | "dataCriacao" | "titulo">;
+
+type OcurrencyInput = {
+  titulo: string;
+  descricao: string;
+  tipo_categoria: string;
+};
+
 export function Home() {
-  const { setModalOpenCallIsOpen, createNewOcurrency } = useModal();
+  const navigate = useNavigate();
 
-  const ocurrenciesForTests = [
-    { id: 1, hour: "8:30", title: "Notebook não está ligando", period: "Hoje" },
-    { id: 2,  hour: "10:25", title: "Servidor, está bloqueando o acesso aos sites", period: "Ontem" },
-    { id: 3, hour: "9:30", title: "Tal problema", period: "Hoje" },
-  ];
+  const { setModalOpenCallIsOpen } = useModal();
+  const [ocurrencies, setOcurrencies] = useState<OcurrencyFormated[]>([]);
+  const [ cookies, , removeCookies ] = useCookies(["token"]);
 
-  const ocurrenciesByPeriod: any = [];
-  for (const ocurrency of ocurrenciesForTests) {
-    const index = ocurrenciesByPeriod[ocurrency.period];
-    if (!index) {
-      ocurrenciesByPeriod[ocurrency.period] = [];
-    }
-    ocurrenciesByPeriod[ocurrency.period].push(ocurrency);
+  useEffect(() => {
+    api
+      .get("gerente", { headers: { token: cookies.token } })
+      .then(({ data }) => {
+        const ocorrenciasFormatadas = data.ocorrencias
+            .map((ocorrencia: OcurrencyType) => FormatOcurrencies(ocorrencia));
+            
+        setOcurrencies(ocorrenciasFormatadas);
+      })
+      .catch(() => {
+        removeCookies("token");
+        navigate("/");
+      });
+  }, []);
+
+  async function createNewOcurrency(data: OcurrencyInput) {
+    const response = await api.post(
+      `/ocorrencias`,
+      { ...data },
+      { headers: { token: cookies.token } }
+    );
+    const ocorrenciaFormatada = FormatOcurrencies(response.data);
+    setOcurrencies([...ocurrencies, ocorrenciaFormatada]);
   }
 
-
-  return (
+  return !!cookies.token ? (
     <>
       <Header>
         <Buttons>
@@ -48,35 +75,34 @@ export function Home() {
             <p>Chamado Recente</p>
           </header>
           <div onClick={() => setModalOpenCallIsOpen(true)}>
-            <strong> Notebook não está ligando </strong>
+            <strong>{"Hello"}</strong>
             <MdArrowRight />
           </div>
         </RecentCall>
 
         <HistoricCalls>
-         
-            <div className="period">
-              <p>Hoje</p>
-                <Ocurrency>
-                  <div className="scheduleCall">
-                    <img src={horarioImage} alt="Horário da Chamada" />
-                    <span>8:30</span>
-                  </div>
+          <div className="period">
+            <p>Hoje</p>
+            {ocurrencies.map((ocurrency) => (
+              <Ocurrency key={ocurrency.id}>
+                <div className="scheduleCall">
+                  <img src={horarioImage} alt="Horário da Chamada" />
+                  <span>{ocurrency.dataCriacao.toString().padEnd(5, "0")}</span>
+                </div>
 
-                  <div
-                    className="titleCall"
-                    onClick={() => {
-                      setModalOpenCallIsOpen(true)
-                    }}
-                  >
-                    <p>Nada</p>
-                    <MdArrowRight color="#FFF" />
-                  </div>
-                </Ocurrency>
-            </div>
+                <Link className="titleCall" to={`/ocurrency/${ocurrency.id}`}>
+                  <p>{ocurrency.titulo}</p>
+                  <MdArrowRight color="#FFF" />
+                </Link>
+              </Ocurrency>
+            ))}
+          </div>
         </HistoricCalls>
       </Content>
-      <OpenCallModal />
+
+      <OpenCallModal onCreateNewOcurrency={createNewOcurrency} />
     </>
+  ) : (
+    <p style={{ background: "red" }}>Carregando</p>
   );
 }

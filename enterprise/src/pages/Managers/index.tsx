@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { MdPlace } from "react-icons/md";
-import { useModals } from "../../contexts/globalContexts";
-import localizationImage from "../../assets/localization.png";
 import { api } from "../../services/api";
 
-import { OcurrencyManagerProfile } from "../../components/Modals/OcurrenceManagerProfie";
 import { SideBar } from "../../components/SideBar";
 import { Filters } from "../../components/Filters";
 
 import { Container, Card, Content } from "./styles";
+
+import localizationImage from "../../assets/localization.png";
 
 type Manager = {
   id: number;
@@ -18,8 +17,6 @@ type Manager = {
 }
 
 export function Managers() {
-  const { setModalOcurrencyManagerIsOpen } = useModals();
-
   const [ managers, setManagers ] = useState<Manager[]>([]);
 
   useEffect(() => {
@@ -36,7 +33,7 @@ export function Managers() {
 
         <div className="cards">
           { managers.map( manager => (
-            <Card onClick={() => setModalOcurrencyManagerIsOpen(true)} key={manager.id}>
+            <Card>
             <img src={localizationImage} alt="Localização do Gerente" />
             <div>
               <h3>{manager.nome}</h3>
@@ -46,9 +43,8 @@ export function Managers() {
               </div>
             </div>
           </Card>
-          )) }
+          ))}
         </div>
-        <OcurrencyManagerProfile />
       </Content>
     </Container>
   );

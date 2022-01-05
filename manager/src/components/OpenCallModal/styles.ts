@@ -88,4 +88,12 @@ export const Field = styled.div`
     resize: none;
     height: 10rem;
   }
+
+  p {
+    font-size: .85rem;
+    position: absolute;
+    top: -10px;
+    transform: translateY(-50%);
+    right: 0;
+  }
 `;

@@ -2,11 +2,9 @@ import { createContext, ReactNode, useContext, useState } from "react";
 
 interface modalContextProps {
   modalEnterpriseIsOpen: boolean;
-  modalOcurrencyManagerIsOpen: boolean;
   modalFinishedOcurrencyIsOpen: boolean;
   modalCreateTechcnianIsOpen: boolean;
   setModalEnterpriseIsOpen(isOpen: boolean): void;
-  setModalOcurrencyManagerIsOpen(isOpen: boolean): void;
   setModalFinishedOcurrencyIsOpen(isOpen: boolean): void;
   setModalCreateTechnicinIsOpen(isOpen: boolean): void;
 }
@@ -26,10 +24,7 @@ interface AppContextProps {
 
 export function AppContext({ children }: AppContextProps) {
   const [modalEnterpriseIsOpen, setModalEnterpriseIsOpen] = useState(false);
-  const [modalOcurrencyManagerIsOpen, setModalOcurrencyManagerIsOpen] =
-    useState(false);
-  const [modalFinishedOcurrencyIsOpen, setModalFinishedOcurrencyIsOpen] =
-    useState(false);
+  const [modalFinishedOcurrencyIsOpen, setModalFinishedOcurrencyIsOpen] = useState(false);
   const [ modalCreateTechcnianIsOpen, setModalCreateTechnicinIsOpen ] = useState(false);
 
   const [typeOfAccount, setTypeofAccount] = useState("");
@@ -39,12 +34,10 @@ export function AppContext({ children }: AppContextProps) {
       <modalsContext.Provider
         value={{
           modalEnterpriseIsOpen,
-          modalOcurrencyManagerIsOpen,
           modalFinishedOcurrencyIsOpen,
           modalCreateTechcnianIsOpen,
           setModalEnterpriseIsOpen,
           setModalFinishedOcurrencyIsOpen,
-          setModalOcurrencyManagerIsOpen,
           setModalCreateTechnicinIsOpen
         }}
       >

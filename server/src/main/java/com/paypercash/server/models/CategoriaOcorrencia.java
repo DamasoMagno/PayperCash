@@ -42,7 +42,7 @@ public class CategoriaOcorrencia implements Serializable {
 	}
 
 	public Set<Ocorrencia> getOcorrencia() {
-		return ocorrencia;
+			return ocorrencia;
 	}
 
 	public void setOcorrencia(Set<Ocorrencia> ocorrencia) {

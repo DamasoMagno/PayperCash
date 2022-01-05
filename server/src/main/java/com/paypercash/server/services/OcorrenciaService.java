@@ -72,20 +72,22 @@ public class OcorrenciaService {
 		return novaOcorrencia;
 	}
 
-	public Ocorrencia criarOcorrencia(Ocorrencia ocorrencia, Long id) throws Exception {
-		Optional<Ocorrencia> ocorrenciaJaExise = ocorrenciaRepository.findAll().stream()
-				.filter(x -> x.getDataCriacao().getMinute() == ocorrencia.getDataCriacao().getMinute()).findFirst();
+	public Ocorrencia criarOcorrencia(Ocorrencia ocorrencia, Long id) throws Exception {		
+//		Optional<Ocorrencia> ocorrenciaJaExise = ocorrenciaRepository.findAll().stream()
+//				.filter(x -> x.getDataCriacao().getMinute() == ocorrencia.getDataCriacao().getMinute()).findFirst();
 		
 		CategoriaOcorrencia categoriaEncontrada = categoriaOcorrenciaRepository
 				.findByNome(ocorrencia.getTipo_categoria());
 
+		System.out.println(categoriaEncontrada);
+		
 		if (categoriaEncontrada == null) {
 			throw new Exception("Não é possivel cadastrar uma ocorrencia sem sua categoria");
 		}
 
-		if (!ocorrenciaJaExise.isEmpty()) {
-			throw new Exception("Não é possivel, cadastrar mais de uma ocorrencia no mesmo minuto");
-		}
+//		if (!ocorrenciaJaExise.isEmpty()) {
+//			throw new Exception("Não é possivel, cadastrar mais de uma ocorrencia no mesmo minuto");
+//		}
 
 		List<Empresa> empresaEncontrada = empresaRepository.findAll();
 		GerenteOcorrencias gerenteOcorrenciasEcontrando = gerenteOcorrenciasRepository.findById(id).get();

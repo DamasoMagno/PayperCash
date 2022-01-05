@@ -19,7 +19,7 @@ export const Content = styled.div`
   }
 `;
 
-export const Card = styled.div`
+export const Card = styled.a`
   width: 225px;
   background: #333333;
   border-radius: 0.25rem;

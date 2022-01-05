@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.form`
   margin: 0 auto;
   max-width: 480px;
   padding: 0 1rem 1rem;
@@ -40,5 +40,10 @@ export const Buttons = styled.div`
     svg {
       margin-right: 0.25rem;
     }
+  }
+
+  button {
+    background: transparent;
+    border: 0;
   }
 `;

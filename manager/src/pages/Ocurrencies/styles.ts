@@ -77,7 +77,7 @@ export const Ocurrency = styled.div`
     }
   }
 
-  div.titleCall {
+  a.titleCall {
     cursor: pointer;
     margin-left: 1rem;
     padding: 1rem;
