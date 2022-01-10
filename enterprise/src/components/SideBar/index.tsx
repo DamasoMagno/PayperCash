@@ -1,39 +1,39 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
-import { useModals, useUser } from "../../contexts/globalContexts";
+import { useModals } from "../../contexts/modalsContext";
 
 import { NavigationSection } from "./NavigationSection";
 
 import { Container, User } from "./styles";
 
-import userProfileImage from "../../assets/profile.jpg";
+import { useAuth } from "../../contexts/authContext";
+import { MdPeople } from "react-icons/md";
 
 export function SideBar() {
   const { setModalEnterpriseIsOpen } = useModals();
-  const { typeOfAccount } = useUser();
-
-  useEffect(() => {
-    console.log(typeOfAccount);
-  });
+  const { user, logoutUser } = useAuth();
 
   return (
     <Container>
       <User>
-        <Link to="/">
-          <FiLogOut color="#FFF" size={20} />
-        </Link>
+        <div>
+          <button onClick={logoutUser}>
+            <FiLogOut color="#FFF" size={20} />
+          </button>
+          <button onClick={() => setModalEnterpriseIsOpen(true)}>
+            <MdPeople size={20} color="#FFF"/>
+          </button>
+        </div>
 
         <div className="profile">
-          <p>Giordano</p>
-          <span>giordano221@gmail.com</span>
+          <p>{user.nome?.slice(0, 10) ?? "Giordano"}</p>
+          <span>{user.email ?? "paypercash@gmail.com"}</span>
         </div>
       </User>
 
       <nav>
         <NavigationSection router="/ocurrencies/finished" title="Concluídos" />
         <NavigationSection router="/ocurrencies/pendents" title="Pendentes" />
-        {typeOfAccount === "" && (
+        {user.perfil === "EMPRESA" && (
           <>
             <NavigationSection router="/managers" title="Gerentes" />
             <NavigationSection router="/technicians" title="Tecnicos" />

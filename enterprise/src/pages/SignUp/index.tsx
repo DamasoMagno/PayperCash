@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { MdArrowLeft, MdMail, MdHome, MdPlace, MdLock } from "react-icons/md";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { api } from "../../services/api";
+
+import { showError } from "../../utils/showError";
 
 import { Button } from "../../components/Form/Button";
 import { Input } from "../../components/Form/Input";
 
 import { Container, Background, Form, InputsForm } from "./styles";
-import { api } from "../../services/api";
 
 type Inputs = {
   nome: string;
@@ -15,18 +20,47 @@ type Inputs = {
   endereco: string;
 };
 
+export type Error = {
+  response: {
+    data: string;
+    status: number;
+  };
+};
+
+const schemaValidator = yup
+  .object({
+    nome: yup.string().required("Nome obrigatório"),
+    email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
+    senha: yup
+      .string()
+      .required("Senha obrigatória")
+      .min(6, "Minimo 6 caracteres"),
+    endereco: yup.string().required("Endereço obrigatório"),
+  })
+  .required();
+
 export function SignUp() {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<Inputs>();
 
-  async function handleSignUp(data: Inputs){
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: yupResolver(schemaValidator),
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  async function handleSignUp(data: Inputs) {
     try {
-      const response = await api.post("/enterprises", data);
-      console.log(response);
+      setLoading(true);
+      await api.post("/empresas", data);
+      setLoading(false);
       navigate("/ocurrencies/pendents");
     } catch (error) {
-      if(error instanceof Error)
-        console.log(error);
+      setLoading(false);
+      showError(error);
     }
   }
 
@@ -38,31 +72,31 @@ export function SignUp() {
           <h2>Cadastrar</h2>
           <Input
             icon={MdHome}
-            required
             register={() => register("nome")}
             placeholder="Empresa"
+            error={errors.nome}
           />
           <Input
             icon={MdMail}
-            required
             type="email"
             register={() => register("email")}
             placeholder="Email"
+            error={errors.email}
           />
           <Input
             icon={MdLock}
-            required
             register={() => register("senha")}
             placeholder="Senha"
             isPassword
+            error={errors.senha}
           />
           <Input
             icon={MdPlace}
-            required
             register={() => register("endereco")}
             placeholder="Endereço"
+            error={errors.endereco}
           />
-          <Button title="Cadastrar" />
+          <Button title="Cadastrar" isLoading={loading} />
         </InputsForm>
 
         <Link to="/">

@@ -37,7 +37,7 @@ export function Manager() {
       <SideBar />
 
       <Content>
-        <h1>Tecnico</h1>
+        <h1>Gernte</h1>
         <section className="user">
           <Field label="Nome" value={manager.nome} canEdit />
           <Field label="E-mai" value={manager.email} canEdit/>

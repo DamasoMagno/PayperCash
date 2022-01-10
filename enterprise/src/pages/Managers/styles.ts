@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -19,7 +20,7 @@ export const Content = styled.div`
   }
 `;
 
-export const Card = styled.a`
+export const Card = styled(Link)`
   width: 225px;
   background: #333333;
   border-radius: 0.25rem;

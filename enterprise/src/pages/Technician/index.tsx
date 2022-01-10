@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { useCookies } from "react-cookie";
 import { MdEdit } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import { Options } from "../../components/Filters/Options";
@@ -26,10 +27,11 @@ export function Technician() {
   const { id } = useParams();
 
   const [ technician, setTechnician ] = useState<Technician>({} as Technician);
+  const [ cookie ] = useCookies(["token"]);
 
   useEffect(() => {
-    api.get(`/technicians/${id}`)
-      .then(response => setTechnician(response.data));
+    api.get(`/technicians`, { headers: { token: cookie.token } })
+      .then(response => setTechnician(response.data))
   }, []);
 
   console.log(technician);
@@ -53,7 +55,7 @@ export function Technician() {
           </div>
           <div className="resume">
             <Options />
-            <div>
+            {/* <div>
               <Status className="finished">
                 <p>Concluidos</p>
                 <span />
@@ -64,7 +66,7 @@ export function Technician() {
                 <span />
                 <p>0</p>
               </Status>
-            </div>
+            </div> */}
           </div>
           { technician.ocorrencias?.map(ocurrency => (
             <Item

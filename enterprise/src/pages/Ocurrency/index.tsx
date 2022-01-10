@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useModals } from "../../contexts/globalContexts";
+import { useModals } from "../../contexts/modalsContext";
+import { Ocurrency as OcurrencyType } from "../../interfaces";
+import { useCookies } from "react-cookie";
+import { useAuth } from "../../contexts/authContext";
+import { api } from "../../services/api";
 
 import { Field } from "../../components/Form/Field";
 import { SideBar } from "../../components/SideBar";
@@ -9,23 +13,21 @@ import { FinishedModalOcurrency } from "../../components/Modals/FinishedOcurrenc
 import { Container, Divider, Content } from "./styles";
 
 import localizationImage from "../../assets/localization.png";
-import { Button } from "../../components/Form/Button";
-import { useEffect } from "react";
-import { api } from "../../services/api";
 
 export function Ocurrency() {
+  const { user } = useAuth();
   const { id } = useParams();
 
   const { setModalFinishedOcurrencyIsOpen } = useModals();
 
   const [techinician, setTechinician] = useState("");
   const [resolution, setResolution] = useState("");
-  const [ ocurrency, setOcurreny ] = useState({});
+  const [ ocurrency, setOcurreny] = useState({} as OcurrencyType);
 
   useEffect(() => {
-    api.get(`/ocurrencies/${id}`)
-      .then(response => console.log(response));
-  });
+    api.get(`/ocorrencias/${user.id}`)
+      .then(response => setOcurreny(response.data));
+  }, []);
 
   return (
     <Container>
@@ -34,12 +36,12 @@ export function Ocurrency() {
       <Content>
         <header>
           <small>Detalhes do chamado</small>
-          <strong>Notebook na sala de gerencias não está ligando</strong>
+          <strong>{ocurrency.titulo}</strong>
           <p>Chamado aberto em 09 de janeiro de 2021 as 15:30</p>
           <Divider>
             <span />
             <div className={id === "1" ? "concluded" : "pendent"}>
-              <p>{id === "1" ? "concluido" : "pendente"}</p>
+              <p>{ocurrency.status?.toLowerCase()}</p>
             </div>
           </Divider>
         </header>
@@ -47,13 +49,13 @@ export function Ocurrency() {
           <Field label="Solicitante" value="Maria Gonçalvez" />
           <Field
             label="Título"
-            value="Monitor não  estava amostrando o display  ligado"
+            value={ocurrency.titulo}
           />
           <Field
             label="Descrição"
-            value="Hoje de manhã, cheguei ao posto e notei que o monitor da sala de impressão não estava sando sinal de funcionamento."
+            value={ocurrency.descricao}
           />
-          <Field label="Resolutividade" value={resolution} />
+          <Field label="Resolutividade" value={ocurrency.resolucao} />
           <Field label="Técnico" value={techinician} />
           <div className="locale">
             <img src={localizationImage} alt="Localização do Gerente" />
@@ -65,7 +67,8 @@ export function Ocurrency() {
             </div>
           </div>
         </main>
-          {!techinician ? (
+        {user.perfil === "TECNICO" &&
+          ( ocurrency.status === "PENDENTE" ? (
             <button onClick={() => setTechinician("Damaso")} className="action">
               Prestar Suporte
             </button>
@@ -78,7 +81,7 @@ export function Ocurrency() {
                 Finalizar Chamado
               </button>
             )
-          )}
+          ))}
       </Content>
       <FinishedModalOcurrency setResolution={setResolution} />
     </Container>

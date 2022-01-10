@@ -17,12 +17,11 @@ type Category = {
 
 export function Category() {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const [ category, setCategory ] = useState<Category>();
 
   useEffect(() => {
-    api.get(`/categories/${id}`)
+    api.get(`/categorias/${id}`)
       .then(response => setCategory(response.data));
   }, []);
 

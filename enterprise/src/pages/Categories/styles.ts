@@ -13,37 +13,44 @@ export const Content = styled.div`
 `;
 
 export const NewCategory = styled.div`
-  margin-top: .5rem;
-  display: flex;
+  margin-top: 0.5rem;
 
-  div {
-    position: relative;
-    flex: 1;
+  div.input {
+    display: flex;
 
-    label {
-      position: absolute;
-      top: -10px;
-      left: 10px;
-      transform: translateY(10%);
-      background: #fff;
-      padding: 0 0.5rem;
-      font-size: 0.8rem;
-    }
+    div {
+      position: relative;
+      flex: 1;
 
-    input {
-      border: 1px solid red;
-      width: 100%;
-      font-size: 1.15rem;
-      border: 1px solid rgba(0, 0, 0, 0.25);
-      padding: .9rem;
-      height: 2.5rem;
-      color: #000;
-      border-radius: .25rem;
+      label {
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        transform: translateY(10%);
+        background: #fff;
+        padding: 0 0.5rem;
+        font-size: 0.8rem;
+      }
+
+      input {
+        border: 1px solid red;
+        width: 100%;
+        font-size: 1.15rem;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        padding: 0.9rem;
+        height: 2.5rem;
+        color: #000;
+        border-radius: 0.25rem;
+
+        &:focus ~ label {
+          font-weight: bold;
+        }
+      }
     }
   }
 
   button {
-    margin-left: .25rem;
+    margin-left: 0.25rem;
     background: var(--background);
     display: flex;
     justify-content: center;
@@ -52,7 +59,7 @@ export const NewCategory = styled.div`
     padding: 0 1rem;
 
     &:hover {
-      filter: brightness(.9);
+      filter: brightness(0.9);
     }
   }
 `;

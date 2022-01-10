@@ -16,27 +16,36 @@ export const Container = styled.aside`
 export const User = styled.div`
   padding-left: 1rem;
 
-  > a {
-    svg {
-      opacity: 0.5;
-      transition: 0.2s opacity;
+  div:nth-child(1) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-      &:hover {
-        opacity: 0.85;
+    button {
+      background: transparent;
+      border: 0;
+
+      svg {
+        opacity: 0.5;
+        transition: 0.2s opacity;
+
+        &:hover {
+          opacity: 0.85;
+        }
       }
     }
   }
 
   div.profile {
-    margin-top: 1.5rem; 
+    margin-top: 1.5rem;
 
     p {
       font-size: 1.25rem;
-      color: #FFF;
+      color: #fff;
     }
 
     span {
-      color: rgba(255, 255, 255, .85);
+      color: rgba(255, 255, 255, 0.85);
     }
   }
 `;

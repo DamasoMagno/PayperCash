@@ -9,7 +9,7 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.div`
-  width: 60%;
+  width: 100%;
   max-width: 720px;
   text-align: center;
   display: flex;
@@ -31,6 +31,8 @@ export const Form = styled.div`
 `;
 
 export const InputsForm = styled.form`
+  width: 60%;
+
   h2 {
     color: #fff;
     text-transform: uppercase;
@@ -41,19 +43,20 @@ export const InputsForm = styled.form`
 `;
 
 export const TypeAccount = styled.div`
-  margin-top: 1rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: .5rem;
+  gap: 0.5rem;
 `;
 
 export const Type = styled.button<{ selecioned: boolean }>`
-    padding: 0.5rem 1rem;
-    color: #000;
-    border-radius: 0.25rem;
-    background: ${({ selecioned }) => selecioned ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.5)"};
-    border: 1px solid #fff;
-    font-size: 1.25rem;
+  padding: 0.5rem 1rem;
+  color: #000;
+  height: 3.5rem;
+  border-radius: 0.25rem;
+  background: ${({ selecioned }) =>
+    selecioned ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.5)"};
+  border: 1px solid #fff;
+  font-size: 1.25rem;
 `;
 
 export const Background = styled.section`

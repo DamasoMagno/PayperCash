@@ -1,28 +1,47 @@
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { api } from "../../services/api";
+import { useModals } from "../../contexts/modalsContext";
+import { User } from "../../interfaces";
+
 import { Item as Technician } from "../../components/Item";
 import { Filters } from "../../components/Filters";
 import { CreateTechnicianModal } from "../../components/Modals/CreateTechnicianModal";
 import { SideBar } from "../../components/SideBar";
 
 import { Container, Content } from "./styles";
-import { useModals } from "../../contexts/globalContexts";
-import { useEffect, useState } from "react";
-import { api } from "../../services/api";
+import { useAuth } from "../../contexts/authContext";
+import { showError } from "../../utils/showError";
 
-type Technicians = {
-  id: number;
-  nome: string;
-  email: string;
-}
+type TechnicianInput = Omit<User, "id" | "endereco" | "perfil">;
 
 export function Techinicians() {
-  const { modalCreateTechcnianIsOpen, setModalCreateTechnicinIsOpen } = useModals();
+  const { logoutUser } = useAuth();
+  const { modalCreateTechcnianIsOpen, setModalCreateTechnicinIsOpen } =
+    useModals();
 
-  const [ technicians, setTechnicians ] = useState<Technicians[]>([]);
+  const [technicians, setTechnicians] = useState<User[]>([]);
+  const [cookie] = useCookies(["token"]);
 
   useEffect(() => {
-    api.get("/enterprises/1")
-      .then(response => setTechnicians(response.data.tecnicos));
+    api
+      .get("/empresas", { headers: { token: cookie.token } })
+      .then((response) => setTechnicians(response.data.tecnicos))
+      .catch(logoutUser);
   }, []);
+
+  async function handleCreateNewTechnician(data: TechnicianInput) {
+    try {
+      const response = await api.post(
+        "/tecnicos",
+        { ...data },
+        { headers: { token: cookie.token } }
+      );
+      setTechnicians([...technicians, response.data]);
+    } catch (error) {
+      showError(error, logoutUser);
+    }
+  }
 
   return (
     <>
@@ -30,15 +49,17 @@ export function Techinicians() {
         <SideBar />
         <Content>
           <Filters>
-            <button onClick={() => setModalCreateTechnicinIsOpen(true)}>Adicionar</button>
+            <button onClick={() => setModalCreateTechnicinIsOpen(true)}>
+              Adicionar
+            </button>
           </Filters>
-          { technicians.map( technician => (
-            <Technician 
-            key={technician.id}
-            router={`/technician/${technician.id}`}
-            title={technician.nome}
-            subtitle={technician.email}
-          />
+          {technicians.map((technician) => (
+            <Technician
+              key={technician.id}
+              router={`/technician/${technician.id}`}
+              title={technician.nome}
+              subtitle={technician.email}
+            />
           ))}
         </Content>
       </Container>
@@ -46,6 +67,7 @@ export function Techinicians() {
       <CreateTechnicianModal
         isOpen={modalCreateTechcnianIsOpen}
         onRequestClose={() => setModalCreateTechnicinIsOpen(false)}
+        onCreateNewTechnician={handleCreateNewTechnician}
       />
     </>
   );

@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { api } from "../../services/api";
+import { useAuth } from "../../contexts/authContext";
+import { Ocurrency } from "../../interfaces";
+
+import { showError } from "../../utils/showError";
 
 import { Item as Category } from "../../components/Item";
 import { SideBar } from "../../components/SideBar";
@@ -10,21 +14,29 @@ import { Container, Content, Historic, NewCategory } from "./styles";
 type Category = {
   id: number;
   nome: string;
-  ocorrencia: Array<{}>;
-}
+  ocorrencia: Ocurrency[];
+};
 
 export function Categories() {
+  const { logoutUser } = useAuth();
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategory, setNewCategory] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    api.get("/categories")
-      .then(response => setCategories(response.data));
+    api.get<Category[]>("/categorias")
+      .then((res) => setCategories(res.data));
   }, []);
 
-  async function handleCreateNewCategory(){
-    const { data } = await api.post('/categories', { id: Math.random(), nome: newCategory });
-    setCategories([...categories, data]);
+  async function handleCreateNewCategory() {
+    if (!newCategory) return setError("Campo obrigatório");
+    try {
+      const { data } = await api.post("/categorias", { nome: newCategory });
+      setCategories([...categories, data]);
+    } catch (error) {
+      showError(error, logoutUser);
+    }
   }
 
   return (
@@ -33,16 +45,22 @@ export function Categories() {
 
       <Content>
         <NewCategory>
-          <div>
-            <label htmlFor="newCategory">Nova Categoria</label>
-            <input
-              id="newCategory"
-              onChange={(e) => setNewCategory(e.target.value)}
-            />
+          <div className="input">
+            <div>
+              <input
+                id="newCategory"
+                onChange={(e) => {
+                  setError("");
+                  setNewCategory(e.target.value);
+                }}
+              />
+              <label htmlFor="newCategory">Nova Categoria</label>
+            </div>
+            <button onClick={handleCreateNewCategory}>
+              <MdAdd color="#FFF" size={24} />
+            </button>
           </div>
-          <button onClick={handleCreateNewCategory}>
-            <MdAdd color="#FFF" size={24} />
-          </button>
+          {error && <p>{error}</p>}
         </NewCategory>
 
         <Historic>

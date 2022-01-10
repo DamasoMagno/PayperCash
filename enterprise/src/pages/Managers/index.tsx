@@ -8,20 +8,28 @@ import { Filters } from "../../components/Filters";
 import { Container, Card, Content } from "./styles";
 
 import localizationImage from "../../assets/localization.png";
+import { Link, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { useAuth } from "../../contexts/authContext";
 
 type Manager = {
   id: number;
   nome: string;
   email: string;
   endereco: string;
-}
+};
 
 export function Managers() {
-  const [ managers, setManagers ] = useState<Manager[]>([]);
+  const { logoutUser } = useAuth();
+
+  const [managers, setManagers] = useState<Manager[]>([]);
+  const [cookie] = useCookies(["token"]);
 
   useEffect(() => {
-    api.get("/enterprises/1")
-      .then(response => setManagers(response.data.gerenteOcorrencias));
+    api
+      .get("/empresas", { headers: { token: cookie.token } })
+      .then((response) => setManagers(response.data.gerenteOcorrencias))
+      .catch(logoutUser);
   }, []);
 
   return (
@@ -32,17 +40,17 @@ export function Managers() {
         <Filters />
 
         <div className="cards">
-          { managers.map( manager => (
-            <Card>
-            <img src={localizationImage} alt="Localização do Gerente" />
-            <div>
-              <h3>{manager.nome}</h3>
+          {managers.map((manager) => (
+            <Card key={manager.id} to={`/manager/${manager.id}`}>
+              <img src={localizationImage} alt="Localização do Gerente" />
               <div>
-                <MdPlace color="#666360" size={10} />
-                <p>{manager.endereco}</p>
+                <h3>{manager.nome}</h3>
+                <div>
+                  <MdPlace color="#666360" size={10} />
+                  <p>{manager.endereco}</p>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
           ))}
         </div>
       </Content>

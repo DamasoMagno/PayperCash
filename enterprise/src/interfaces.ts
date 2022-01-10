@@ -2,11 +2,24 @@ export type Ocurrency = {
   id: number;
   titulo: string;
   descricao: string;
-  data_criacao: string;
+  dataCriacao: string;
   resolucao: string;
   tipo_categoria: string;
+  status: "PENDENTE" | "CONCLUIDO";
 }
 
-export type Enterprise = {}
+export type User = {
+  id: number;
+  email: string;
+  nome: string;
+  senha: string;
+  endereco?: string;
+  perfil: "EMPRESA" | "TECNICO";
+};
 
-export type Technician = {}
+export type ErrorAxios = {
+  response: {
+    data: string;
+    status: number;
+  };
+}

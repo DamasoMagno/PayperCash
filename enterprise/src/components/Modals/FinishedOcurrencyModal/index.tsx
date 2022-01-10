@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useModals } from "../../../contexts/globalContexts";
+import { useModals } from "../../../contexts/modalsContext";
 import ReactModal from "react-modal";
 
 import { Container, Buttons, Resolution } from "./styles";
