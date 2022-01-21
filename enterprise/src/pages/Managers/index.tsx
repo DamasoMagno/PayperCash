@@ -3,14 +3,12 @@ import { MdPlace } from "react-icons/md";
 import { api } from "../../services/api";
 
 import { SideBar } from "../../components/SideBar";
-import { Filters } from "../../components/Filters";
 
-import { Container, Card, Content } from "./styles";
+import { Container, Content } from "./styles";
 
-import localizationImage from "../../assets/localization.png";
-import { Link, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import { useAuth } from "../../contexts/authContext";
+import { InputSearch } from "../../components/Form/InputSearch";
+import { Item } from "../../components/Item";
 
 type Manager = {
   id: number;
@@ -23,12 +21,11 @@ export function Managers() {
   const { logoutUser } = useAuth();
 
   const [managers, setManagers] = useState<Manager[]>([]);
-  const [cookie] = useCookies(["token"]);
 
   useEffect(() => {
     api
-      .get("/empresas", { headers: { token: cookie.token } })
-      .then((response) => setManagers(response.data.gerenteOcorrencias))
+      .get("/gerentes/todos")
+      .then((response) => setManagers(response.data))
       .catch(logoutUser);
   }, []);
 
@@ -37,20 +34,19 @@ export function Managers() {
       <SideBar />
 
       <Content>
-        <Filters />
+        <InputSearch title="Procurar Gerente" />
 
         <div className="cards">
+          <h2>Gerentes</h2>
+
           {managers.map((manager) => (
-            <Card key={manager.id} to={`/manager/${manager.id}`}>
-              <img src={localizationImage} alt="Localização do Gerente" />
-              <div>
-                <h3>{manager.nome}</h3>
-                <div>
-                  <MdPlace color="#666360" size={10} />
-                  <p>{manager.endereco}</p>
-                </div>
-              </div>
-            </Card>
+            <Item
+              key={manager.id}
+              title={manager.nome}
+              subtitle={manager.endereco}
+              icon={MdPlace}
+              router={`/manager/${manager.id}`}
+            />
           ))}
         </div>
       </Content>

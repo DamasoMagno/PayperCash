@@ -2,10 +2,11 @@ import styled, { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
   :root {
-    --heading: #333333;
-    --text: #333333;
+    --primary-color: #fff;
+    --secondary-color: #5800c7;
+    --primary-background: #5800C7;
+    --secondary-background: #F5F5F5;
   }
-
  * {
     padding: 0;
     margin: 0;
@@ -39,7 +40,7 @@ export default createGlobalStyle`
     opacity: .7;
   }
 
-  .modalOverlay {
+  .modalOverlay, .removeCallModalOverlay {
     background: rgba(0, 0, 0, .5);
     
     position: fixed;
@@ -54,12 +55,18 @@ export default createGlobalStyle`
 
   }
 
-  .modalContent {
+  .modalContent, .removeCallModalContent {
     background: rgb(255, 255, 255);
-    max-width: 900px;
-    width: 90%;
+    max-width: 750px;
+    width: 75%;
     margin: 0 auto;
     padding: 2rem;
     border-radius: .25rem;
+  }
+
+  .removeCallModalContent {
+    max-width: 400px;
+    width: 90%;
+    padding: 1.5rem;
   }
 `;

@@ -10,91 +10,86 @@ export const Content = styled.div`
   width: 90%;
   margin: 0 auto;
 
-  header {
-    small {
-      display: block;
-      color: rgba(51, 51, 51, 0.85);
-      font-weight: bold;
-      margin-bottom: 0.85rem;
-    }
-
-    strong {
-      display: block;
-      font-size: 1.25rem;
-      margin-bottom: 0.4rem;
-    }
-
-    > p {
-      color: rgba(51, 51, 51, 0.85);
-      font-weight: bold;
-    }
+  button.action {
+    margin: 0.5rem 0;
+    background: var(--primary-button);
+    color: var(--primary-color);
+    padding: 0.5rem;
+    font-size: 1rem;
+    float: right;
+    border-radius: 0.25rem;
   }
 
-    button.action {
-      margin: 0.5rem 0;
-      background: var(--primary-button);
-      color: var(--primary-color);
-      padding: 0.5rem;
-      font-size: 1rem;
-      float: right;
-      border-radius: .25rem;
-  }
-
-  .locale {
-    margin-top: 1rem;
+  div.locale {
     display: flex;
-    align-items: center;
-
-    img {
-      margin-right: 1rem;
-      height: 10rem;
-    }
+    align-items: flex-end;
 
     div {
       width: 100%;
     }
 
-    button {
-      margin-top: 1rem;
-      font-size: 1.15rem;
-      height: 2rem;
-      background-color: var(--button);
-      color: #ffffff;
-      border-radius: 0.25rem;
-      padding: 0.25rem;
+    a {
+      margin-left: .5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 0;
+      border-radius: .25rem;
+      background: var(--primary-background);
+      color: var(--primary-color);
+      padding: .55rem .25rem;
+      
+      svg {
+        margin-right: .2rem;
+      }
     }
+  }
+
+  button {
+    border: 1px solid red;
+    border-radius: .25rem;
+    padding: .5rem 1rem;
+    background: #fff;
+    color: red;
+    margin: 1rem 0;
   }
 `;
 
-export const Divider = styled.div`
+export const OcurrencyResume = styled.div`
+  background: #eee;
+  color: #333;
+  border-radius: 0.25rem;
+  margin: -4rem 0 2rem;
+  padding: 1rem;
+  position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
 
-  span {
-    display: block;
-    background-color: rgba(0, 0, 0, 0.15);
-    height: 0.125rem;
-    border-radius: 1rem;
-    width: 100%;
+  header {
+    small {
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 1rem;
+    }
   }
 
-  div {
-    margin-left: 0.85rem;
-    border-radius: 1rem;
-    padding: 0.25rem 0.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 800;
+  strong {
+    margin-top: .25rem;
+    line-height: 2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333;
+  }
 
-    &.pendent {
-      border: 1px solid rgba(255, 0, 0, 0.5);
-      color: red;
-    }
-
-    &.concluded {
-      border: 1px solid rgba(0, 255, 0, 0.5);
-      color: #19ff05;
-    }
+  div.status {
+    position: absolute;
+    right: -5%;
+    top: 50%;
+    transform: translateY(-90%);
+    color: #FFF;
+    background: var(--primary-background);
+    padding: .4rem .5rem;
+    border-radius: 16px;
+    border: 0;
   }
 `;

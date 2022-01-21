@@ -3,23 +3,30 @@ import { useModals } from "../../../contexts/modalsContext";
 import ReactModal from "react-modal";
 
 import { Container, Buttons, Resolution } from "./styles";
+import { api } from "../../../services/api";
+import { useParams } from "react-router-dom";
+import { throwToastError } from "../../../utils/toastify";
 
 interface FinishedModalOcurrencyProps {
   setResolution: (text: string) => void;
 }
 
-export function FinishedModalOcurrency({
-  setResolution,
-}: FinishedModalOcurrencyProps) {
-  const [content, setContent] = useState("");
-  const { modalFinishedOcurrencyIsOpen, setModalFinishedOcurrencyIsOpen } =
-    useModals();
+export function FinishedModalOcurrency({ setResolution }: FinishedModalOcurrencyProps) {
+  const { id } = useParams();
 
-  function handleFinishOcurrency() {
+  const [ content, setContent ] = useState("");
+  const { modalFinishedOcurrencyIsOpen, setModalFinishedOcurrencyIsOpen } = useModals();
+
+  async function handleFinishOcurrency() {
     if (!content) return;
 
-    setResolution(content);
-    setModalFinishedOcurrencyIsOpen(false);
+    try {
+      const response = await api.put(`/ocorrencias/finalizar/${id}`, { resolucao: content });
+      setResolution(response.data);
+      setModalFinishedOcurrencyIsOpen(false);
+    } catch (error) {
+      throwToastError(error);
+    }
   }
 
   return (

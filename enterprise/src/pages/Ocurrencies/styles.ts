@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { darken } from "polished";
 
 export const Container = styled.div`
@@ -28,7 +28,7 @@ export const Period = styled.div`
   }
 `;
 
-export const Ocurrency = styled.div`
+export const Ocurrency = styled.div<{ otherTechncian?: boolean }>`
   display: flex;
   align-items: center;
   margin-top: 0.5rem;
@@ -37,7 +37,7 @@ export const Ocurrency = styled.div`
     display: flex;
     align-items: center;
 
-    img {
+    svg {
       margin-right: 0.5rem;
       opacity: 0.5;
     }
@@ -54,26 +54,38 @@ export const Ocurrency = styled.div`
   }
 
   .title {
+    position: relative;
     cursor: pointer;
     margin-left: 1rem;
     padding: 1.15rem;
     border-radius: 0.4rem;
-    background: var(--background);
+    background: #f5f5f5;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: 0.2s all;
 
-    &:hover {
-      background: ${darken(0.05, "#3E3B47")};
-      box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
-    }
-
     p {
-      color: #fff;
+      color: #000;
       word-break: break-all;
       margin-right: 2rem;
+    }
+
+    &::after {
+      content: "";
+      width: 5px;
+      border-radius: 0 0.25rem 0.25rem 0;
+      border: 0;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      background: red;
+      transition: all .2s;
+    }
+
+    &:hover::after {
+      width: 10px;
     }
   }
 `;

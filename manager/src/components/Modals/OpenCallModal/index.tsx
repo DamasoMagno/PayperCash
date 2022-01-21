@@ -1,15 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useModal } from "../../hooks/useOcurrencies";
-import { Ocurrency } from "../../interfaces";
-import { api } from "../../services/api";
-import { throwToast } from "../../utils/Toastify";
+import { useModal } from "../../../contexts/modalContext";
+import { Ocurrency } from "../../../interfaces";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import ReactModal from "react-modal";
 
 import { Container, Field } from "./styles";
+import { api } from "../../../services/api";
+import {
+  throwToastError,
+  throwToastSucess,
+} from "../../../utils/toastifyMessages";
 
-type OcurrencyInput = Pick<Ocurrency, "id" | "tipo_categoria" | "titulo" | "descricao">;
+type OcurrencyInput = Pick<
+  Ocurrency,
+  "id" | "tipo_categoria" | "titulo" | "descricao"
+>;
 
 type Category = {
   id: number;
@@ -20,65 +28,55 @@ export type Error = {
   response: {
     data: string;
     status: number;
-  }
+  };
 };
 
 interface AppProps {
   onCreateNewOcurrency: (data: OcurrencyInput) => Promise<void>;
 }
 
+const schemaValidator = yup
+  .object({
+    titulo: yup.string().required("Título Obrigatório").max(50),
+    descricao: yup.string().required("Descrição Obrigatória"),
+  })
+  .required();
+
 export function OpenCallModal({ onCreateNewOcurrency }: AppProps) {
   const navigate = useNavigate();
   const { modalOpenCallIsOpen, setModalOpenCallIsOpen } = useModal();
   const inputRef = useRef<HTMLInputElement>({} as HTMLInputElement);
 
-  const { register, handleSubmit } = useForm<Ocurrency>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Ocurrency>({
+    resolver: yupResolver(schemaValidator),
+  });
+
   const [categories, setCategories] = useState<Category[]>([]);
-  const [maxCharacters, setMaxCharacters] = useState(0);
 
   useEffect(() => {
     api
-      .get<Category[]>("/categorias")
+      .get<Category[]>("/categorias/todas")
       .then((response) => setCategories(response.data));
   }, [modalOpenCallIsOpen]);
 
   async function handleCreateNewOcurrenty(data: Ocurrency) {
     try {
       await onCreateNewOcurrency(data);
-      throwToast({
-        message: "Cadastro de ocorrenicia, realizada com sucesso",
-        type: "success",
-      });
-
-      setMaxCharacters(0);
+      throwToastSucess("Cadastro de ocorrenicia, realizada com sucesso");
       setModalOpenCallIsOpen(false);
     } catch (error) {
-      const signError = error as Error;
-      switch (signError.response.status) {
-        case 401:
-          navigate("/");
-          break;
-        case 404:
-          throwToast({
-            message: "Cadastro de ocorrenicia, realizada com sucesso",
-            type: "success",
-          });
-          break;
-        default:
-          console.log("Nenhum desses");
-      }
+      throwToastError(error);
     }
-  }
-
-  function handleCloseModal() {
-    setModalOpenCallIsOpen(!modalOpenCallIsOpen);
-    setMaxCharacters(0);
   }
 
   return (
     <ReactModal
       isOpen={modalOpenCallIsOpen}
-      onRequestClose={handleCloseModal}
+      onRequestClose={() => setModalOpenCallIsOpen(!modalOpenCallIsOpen)}
       overlayClassName="modalOverlay"
       className="modalContent"
     >
@@ -91,28 +89,13 @@ export function OpenCallModal({ onCreateNewOcurrency }: AppProps) {
               <input
                 id="title"
                 placeholder=" "
-                {...register("titulo", { required: "Titulo obrigatorio" })}
-                maxLength={40}
-                onChange={() =>
-                  setMaxCharacters(
-                    inputRef.current?.maxLength - inputRef.current.value.length
-                  )
-                }
-                ref={inputRef}
+                {...register("titulo")}
               />
-              <label htmlFor="time">Título</label>
-              <p>
-                {maxCharacters} / {inputRef.current?.maxLength ?? 40}
-              </p>
+              <label htmlFor="title">Título</label>
             </Field>
 
             <Field>
-              <select
-                id="category"
-                {...register("tipo_categoria", {
-                  required: "Descrição obrigatória",
-                })}
-              >
+              <select id="category" {...register("tipo_categoria")}>
                 {categories.map((category) => (
                   <option value={category.nome} key={category.id}>
                     {category.nome}
@@ -134,10 +117,14 @@ export function OpenCallModal({ onCreateNewOcurrency }: AppProps) {
         </div>
 
         <div className="buttons">
-          <button onClick={handleCloseModal} className="cancel">
+          <button
+            type="button"
+            onClick={() => setModalOpenCallIsOpen(!modalOpenCallIsOpen)}
+            className="cancel"
+          >
             Fechar
           </button>
-          <button className="sendOrEdit" type="submit">Enviar</button>
+          <button className="sendOrEdit">Enviar</button>
         </div>
       </Container>
     </ReactModal>

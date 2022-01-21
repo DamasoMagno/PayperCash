@@ -6,25 +6,18 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { api } from "../../services/api";
 
-import { showError } from "../../utils/showError";
+import { throwToastError } from "../../utils/toastify";
 
 import { Button } from "../../components/Form/Button";
 import { Input } from "../../components/Form/Input";
 
-import { Container, Background, Form, InputsForm } from "./styles";
+import { Container, Background, Content, Form } from "./styles";
 
 type Inputs = {
   nome: string;
   email: string;
   senha: string;
   endereco: string;
-};
-
-export type Error = {
-  response: {
-    data: string;
-    status: number;
-  };
 };
 
 const schemaValidator = yup
@@ -42,33 +35,24 @@ const schemaValidator = yup
 export function SignUp() {
   const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Inputs>({
     resolver: yupResolver(schemaValidator),
   });
 
-  const [loading, setLoading] = useState(false);
-
   async function handleSignUp(data: Inputs) {
     try {
-      setLoading(true);
       await api.post("/empresas", data);
-      setLoading(false);
-      navigate("/ocurrencies/pendents");
+      navigate("/");
     } catch (error) {
-      setLoading(false);
-      showError(error);
+      throwToastError(error);
     }
   }
 
   return (
     <Container>
       <Background />
-      <Form>
-        <InputsForm onSubmit={handleSubmit(handleSignUp)}>
+      <Content>
+        <Form onSubmit={handleSubmit(handleSignUp)}>
           <h2>Cadastrar</h2>
           <Input
             icon={MdHome}
@@ -78,7 +62,6 @@ export function SignUp() {
           />
           <Input
             icon={MdMail}
-            type="email"
             register={() => register("email")}
             placeholder="Email"
             error={errors.email}
@@ -96,13 +79,12 @@ export function SignUp() {
             placeholder="Endereço"
             error={errors.endereco}
           />
-          <Button title="Cadastrar" isLoading={loading} />
-        </InputsForm>
-
+          <Button title="Cadastrar" isLoading={isSubmitting} />
+        </Form>
         <Link to="/">
-          <MdArrowLeft color="#FFF" /> Fazer Login
+          <MdArrowLeft color="#FFF" />Entrar
         </Link>
-      </Form>
+      </Content>
     </Container>
   );
 }

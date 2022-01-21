@@ -20,10 +20,10 @@ export default createGlobalStyle`
   }
 
   :root {
-    --background: #2f2f2f;
-    --primary-button: #333333;
-    --second-button: #eee;  
     --primary-color: #fff;
+    --secondary-color: #5800c7;
+    --primary-background: #5800C7;
+    --secondary-background: #F5F5F5;
   }
 
   html {
@@ -49,23 +49,31 @@ export default createGlobalStyle`
     cursor: not-allowed;
   }
 
-  .modalOverlay {
+  .modalOverlay, .removeCallModalOverlay {
+    background: rgba(0, 0, 0, .5);
+    
     position: fixed;
     top: 0;
-    bottom: 0;
-    right: 0;
     left: 0;
-    background: rgba(0, 0, 0, .5);
+    right: 0;
+    bottom: 0;
+
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  .modalContent {
-    animation: 1s ${openModal} forwards;
-    position: absolute;
-    width: 600px;
+  .modalContent, .removeCallModalContent {
+    background: rgb(255, 255, 255);
+    max-width: 700px;
+    width: 90%;
+    padding: 2rem;
     border-radius: .25rem;
-    background-color: #FFF;
+  }
+
+  .removeCallModalContent {
+    max-width: 400px;
+    width: 90%;
+    padding: 1.5rem;
   }
 `;

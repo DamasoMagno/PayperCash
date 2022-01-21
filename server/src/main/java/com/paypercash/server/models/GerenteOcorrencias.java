@@ -45,7 +45,7 @@ public class GerenteOcorrencias implements Serializable {
 	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
 	private Empresa empresa;
-
+	
 	public Long getId() {
 		return this.id;
 	}

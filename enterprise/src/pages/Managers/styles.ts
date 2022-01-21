@@ -14,15 +14,12 @@ export const Content = styled.div`
 
   > div.cards {
     margin-top: 1rem;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
   }
 `;
 
 export const Card = styled(Link)`
   width: 225px;
-  background: #333333;
+  background: var(--primary-background);
   border-radius: 0.25rem;
   color: #fff;
   border-radius: 0.4rem;
@@ -49,7 +46,7 @@ export const Card = styled(Link)`
       p {
         margin-left: 0.25rem;
         font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.85);
       }
     }
   }

@@ -19,7 +19,7 @@ export const Containaer = styled.li<NavigationProps>`
     border-radius: 0.1rem;
 
     a {
-      color: #333333;
+      color: var(--secondary-color);
     }
   }
 

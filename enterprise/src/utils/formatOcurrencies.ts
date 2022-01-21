@@ -1,11 +1,4 @@
-type Ocurrency = {
-  id: number;
-  titulo: string;
-  descricao: string;
-  tipo_categoria: string;
-  dataCriacao: string;
-  status: "PENDENTE" | "CONCLUIDO";
-};
+import { Ocurrency } from "../interfaces";
 
 export function formatOcurrencies(ocorrencia: Ocurrency) {
   return {

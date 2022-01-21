@@ -3,34 +3,37 @@ import { ModalsProvider } from "./contexts/modalsContext";
 import { AppRoutes } from "./routes";
 import { CookiesProvider } from "react-cookie";
 import Modal from "react-modal";
-import { QueryClient, QueryClientProvider } from "react-query";
 
 import "react-toastify/dist/ReactToastify.css";
 
 import GlobalStyles from "./styles/global";
 import { AuthProvider } from "./contexts/authContext";
 import { BrowserRouter } from "react-router-dom";
-import { Toastify } from "./components/Toastify";
+import { ToastContainer } from "react-toastify";
 
 Modal.setAppElement("#root");
-
-const queryClient = new QueryClient();
 
 export function App() {
   return (
     <BrowserRouter>
       <CookiesProvider>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
-            <ModalsProvider>
-              <AppRoutes />
-              <GlobalStyles />
-              <UserProfileModal />
-            </ModalsProvider>
-          </QueryClientProvider>
-        </AuthProvider>
+        <ModalsProvider>
+          <AppRoutes />
+          <GlobalStyles />
+          <UserProfileModal />
+        </ModalsProvider>
       </CookiesProvider>
-      <Toastify />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </BrowserRouter>
   );
 }

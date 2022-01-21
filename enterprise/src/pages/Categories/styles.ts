@@ -25,33 +25,31 @@ export const NewCategory = styled.div`
       label {
         position: absolute;
         top: -10px;
-        left: 10px;
-        transform: translateY(10%);
+        left: 10px; 
+        transform: translateY(10%); 
         background: #fff;
+        color: var(--secondary-color);
         padding: 0 0.5rem;
         font-size: 0.8rem;
       }
 
       input {
-        border: 1px solid red;
         width: 100%;
         font-size: 1.15rem;
-        border: 1px solid rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--primary-background);
         padding: 0.9rem;
+        outline: 0;
         height: 2.5rem;
         color: #000;
         border-radius: 0.25rem;
-
-        &:focus ~ label {
-          font-weight: bold;
-        }
       }
     }
   }
 
   button {
     margin-left: 0.25rem;
-    background: var(--background);
+    background: var(--primary-background);
+    color: var(--primary-color);
     display: flex;
     justify-content: center;
     align-items: center;

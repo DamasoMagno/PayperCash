@@ -2,6 +2,11 @@ package com.paypercash.server.services;
 
 import java.util.List;
 
+import javax.naming.NoPermissionException;
+import javax.naming.directory.AttributeInUseException;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +18,8 @@ import com.paypercash.server.repository.EmpresaRepository;
 import com.paypercash.server.repository.GerenteOcorrenciasRepository;
 import com.paypercash.server.security.JwtUtil;
 
+import io.jsonwebtoken.Claims;
+
 @Service
 public class GerenteOcorrenciasService {
 	@Autowired
@@ -22,21 +29,37 @@ public class GerenteOcorrenciasService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-	public GerenteOcorrencias criarGerente(GerenteOcorrencias gerenteOcorrencias) throws Exception {
-		List<Empresa> empresas = empresaRepository.findAll();
-
-		if (empresas.size() < 1	)
-			throw new Exception("Não é possivel cadastrar sem uma empresa exisente");
-		
-		GerenteOcorrencias gerenteJaExiste = gerenteOcorrenciasRepository.findByEmail(gerenteOcorrencias.getEmail());
-		
-		if(gerenteJaExiste != null) {
-			throw new Exception("Não é possível cadastrar dois gerentes com o mesmo email");
+	public String erroNaoEncontrado(String entidade) {
+		return entidade + " não encontrad" + entidade.charAt(entidade.length() - 1);
+	}
+	
+	public GerenteOcorrencias obterGerente(Long userId) {
+		return gerenteOcorrenciasRepository.findById(userId)
+				.orElseThrow(() -> new EntityNotFoundException(erroNaoEncontrado("Gerente")));
+	}
+	
+	public List<GerenteOcorrencias> exibirTodosOsGerentes(Claims token) throws NoPermissionException{
+		if(!JwtUtil.rolePermitida(token, "EMPRESA")) {
+			throw new NoPermissionException("Você não tem permissão para remover essa categoria");
 		}
 		
-		Empresa empresaRegistrada = empresas.stream().findFirst().get();
+		return gerenteOcorrenciasRepository.findAll();
+	}
+	
+	
+	public GerenteOcorrencias criarGerente(GerenteOcorrencias gerenteOcorrencias) throws Exception {
+		Empresa empresaRegistrada = empresaRepository.findAll().stream().findFirst().orElse(null);
+
+		if (empresaRegistrada == null)
+			throw new EntityNotFoundException("Não é possivel cadastrar sem uma empresa exisente");
+
+		GerenteOcorrencias gerenteJaExiste = gerenteOcorrenciasRepository.findByEmail(gerenteOcorrencias.getEmail());
+
+		if(gerenteJaExiste != null) {
+			throw new EntityExistsException("Não é possível cadastrar dois gerentes com o mesmo email");
+		}
+
 		gerenteOcorrencias.setEmpresa(empresaRegistrada);
-		
 		gerenteOcorrencias.setSenha(passwordEncoder.encode(gerenteOcorrencias.getSenha()));
 
 		GerenteOcorrencias novoGerente = gerenteOcorrenciasRepository.save(gerenteOcorrencias);
@@ -55,25 +78,58 @@ public class GerenteOcorrenciasService {
 		if (passwordIsValid == false)
 			throw new BadCredentialsException(errorLoginMessage);
 
-		return JwtUtil.createJWT("213123", "Damaso Magno Lima", gerenteExiste.getId().toString(), 60000);
+		return JwtUtil.createJWT("213123", "Damaso Magno Lima", gerenteExiste.getId().toString(), gerenteExiste.getPerfil(), 120000);
 	}
 
 	public GerenteOcorrencias atualizarGerente(GerenteOcorrencias gerenteOcorrencias, Long id) throws Exception {
-		GerenteOcorrencias gerente = gerenteOcorrenciasRepository.findById(id).get();
-		if (gerente.getEmail() != null) {
-			gerente.setEmail(gerenteOcorrencias.getEmail());
+		GerenteOcorrencias gerenteEncontrado = obterGerente(id);
+		
+		if(gerenteOcorrencias.getNome() != null) {
+			gerenteEncontrado.setNome(gerenteOcorrencias.getNome());
 		}
-		if (gerente.getEndereco() != null) {
-			gerente.setEndereco(gerenteOcorrencias.getEndereco());
+		
+		if (gerenteOcorrencias.getEmail() != null) {
+			gerenteEncontrado.setEmail(gerenteOcorrencias.getEmail());
 		}
-		if (gerente.getNome() != null) {
-			gerente.setNome(gerenteOcorrencias.getNome());
+		
+		if (gerenteOcorrencias.getEndereco() != null) {
+			gerenteEncontrado.setEndereco(gerenteOcorrencias.getEndereco());
 		}
-		if (gerente.getSenha() != null) {
-			gerente.setSenha(passwordEncoder.encode(gerente.getSenha()));
-		}
-
-		GerenteOcorrencias gerenteAtualizado = gerenteOcorrenciasRepository.save(gerente);
+		
+		GerenteOcorrencias gerenteAtualizado = gerenteOcorrenciasRepository.save(gerenteEncontrado);
 		return gerenteAtualizado;
 	}
+
+	public void atualizarSenha(GerenteOcorrencias gerenteOcorrencias) throws Exception {
+		GerenteOcorrencias gerenteEncontrado = gerenteOcorrenciasRepository.findByEmail(gerenteOcorrencias.getEmail());
+		
+		if(gerenteEncontrado == null) {
+			throw new EntityNotFoundException(erroNaoEncontrado("Gerente"));
+		}
+
+		if(gerenteOcorrencias.getSenha().trim() == "" || gerenteOcorrencias.getSenha() == null) {
+			throw new Exception("Senha inválida");
+		}
+		
+		boolean senhaIgual = passwordEncoder.matches(gerenteOcorrencias.getSenha(), gerenteEncontrado.getSenha());
+		
+		if(senhaIgual) {
+			throw new AttributeInUseException("Esta senha já está em uso");
+		}
+		
+		gerenteEncontrado.setSenha(passwordEncoder.encode(gerenteOcorrencias.getSenha()));
+		gerenteOcorrenciasRepository.save(gerenteEncontrado);
+	}
+
+	public GerenteOcorrencias amostrarGerenteEspecifico(Long id, Claims token) throws NoPermissionException {
+		GerenteOcorrencias gerenteEncontrado = obterGerente(id);
+		
+		if(!JwtUtil.rolePermitida(token, "EMPRESA")) {
+			System.out.println(JwtUtil.rolePermitida(token, "EMPRESA"));
+			throw new NoPermissionException("Você não tem permissão para listar esse usuario");
+		}
+		
+		return gerenteEncontrado;
+	}
+	
 }

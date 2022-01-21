@@ -1,17 +1,36 @@
 import { useModals } from "../../../contexts/modalsContext";
-import { MdHome, MdPlace, MdMail, MdLock } from "react-icons/md";
+import { MdHome, MdPlace, MdMail } from "react-icons/md";
 import ReactModal from "react-modal";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../../contexts/authContext";
+import { api } from "../../../services/api";
+import { User } from "../../../interfaces";
+import { throwToastError } from "../../../utils/toastify";
+
+import { Input } from "../../Form/Input";
 
 import { Container } from "./styles";
-import { Input } from "../../Form/Input";
-import { useAuth } from "../../../contexts/authContext";
+
 
 export function UserProfileModal() {
-  const { user } = useAuth();
+  const { user, logoutUser } = useAuth();
   const { modalEnterpriseIsOpen, setModalEnterpriseIsOpen } = useModals();
 
-  const { register, watch } = useForm();
+  const { register, handleSubmit } = useForm();
+
+  async function handleUpdateUser(data: User) {
+    const newData = {
+      nome: data.nome.trim() !== user.nome.trim() ? data.nome : null,
+      email: data.email.trim() !== user.email.trim() ? data.email : null,
+      address: data.endereco?.trim() !== user.endereco ? data.endereco : null,
+    };
+
+    try {
+      await api.put(`/empresas`, { ...newData });
+    } catch (error) {
+      throwToastError(error, logoutUser);
+    }
+  }
 
   return (
     <ReactModal
@@ -20,33 +39,25 @@ export function UserProfileModal() {
       className="modalContent "
       overlayClassName="modalOverlay"
     >
-      <Container>
-        <h1>Informações Pessoais</h1>
-
+      <Container onSubmit={handleSubmit(handleUpdateUser)}>
+        <h2>Informações Pessoais</h2>
         <Input
           icon={MdHome}
           placeholder="Paypercash Desenvolvimento"
-          register={() => register("name")}
+          register={() => register("nome")}
           defaultValue={user.nome}
         />
         <Input
           icon={MdMail}
           placeholder="paypercash@gmail.com"
-          readOnly
           register={() => register("email")}
           defaultValue={user.email}
         />
         <Input
           icon={MdPlace}
           placeholder="Inocêncio Braga, 708"
-          register={() => register("address")}
+          register={() => register("endereco")}
           defaultValue={user.endereco}
-        />
-        <Input
-          icon={MdLock}
-          placeholder="123132"
-          register={() => register("password")}
-          defaultValue={user.senha}
         />
 
         <div className="buttons">

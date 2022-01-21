@@ -1,14 +1,14 @@
-import styled from "styled-components";
+import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
 
 import backgroundImage from "../../assets/background.png";
 
 export const Container = styled.div`
-  background: var(--background);
   height: 100vh;
   display: flex;
 `;
 
-export const Form = styled.div`
+export const Content = styled.div`
   width: 100%;
   max-width: 720px;
   text-align: center;
@@ -19,7 +19,7 @@ export const Form = styled.div`
 
   > a {
     margin-top: 1rem;
-    color: #fff;
+    color: var(--secondary-color);
 
     display: flex;
     align-items: center;
@@ -30,12 +30,11 @@ export const Form = styled.div`
   }
 `;
 
-export const InputsForm = styled.form`
+export const Form = styled.form`
   width: 60%;
 
   h2 {
-    color: #fff;
-    text-transform: uppercase;
+    color: var(--secondary-color);
     font-weight: 600;
     font-size: 2rem;
     margin-bottom: 1rem;
@@ -53,14 +52,32 @@ export const Type = styled.button<{ selecioned: boolean }>`
   color: #000;
   height: 3.5rem;
   border-radius: 0.25rem;
-  background: ${({ selecioned }) =>
-    selecioned ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.5)"};
-  border: 1px solid #fff;
   font-size: 1.25rem;
+
+  ${({ selecioned }) => {
+    if (!selecioned) {
+      return css`
+        background: transparent;
+        border: 1px solid var(--primary-background);
+        color: var(--secondary-color);
+      `;
+    } else {
+      return css`
+        background: var(--primary-background);
+        border: 0;
+        color: var(--primary-color);
+      `;
+    }
+  }}
 `;
 
 export const Background = styled.section`
   flex: 1;
   background: url(${backgroundImage}) no-repeat;
   background-size: cover;
+`;
+
+export const Navigation = styled(Link)<{ active: boolean }>`
+  visibility: ${({ active }) => active ? "visible" : "hidden"};
+  color: var(--secondary-color);
 `;

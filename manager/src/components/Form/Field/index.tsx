@@ -1,6 +1,5 @@
 import { InputHTMLAttributes } from "react";
-import { MdEdit } from "react-icons/md";
-
+import { FiEdit2 } from "react-icons/fi";
 import { Container } from "./styles";
 
 interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -15,11 +14,12 @@ export function Field({ label, value, canEdit, action }: FieldProps) {
     <Container>
       <label>{label}</label>
       <div>
-        <div className="contentInput">
-          <p>{value}</p>
-          {canEdit && <button><MdEdit /></button>}
-        </div>
-        <span />
+        <p>{value}</p>
+        {canEdit && (
+          <button>
+            <FiEdit2 color="#676767" />
+          </button>
+        )}
       </div>
     </Container>
   );

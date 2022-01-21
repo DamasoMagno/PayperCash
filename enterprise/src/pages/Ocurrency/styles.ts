@@ -30,38 +30,39 @@ export const Content = styled.div`
     }
   }
 
-    button.action {
-      margin: 0.5rem 0;
-      background: var(--primary-button);
-      color: var(--primary-color);
-      padding: 0.5rem;
-      font-size: 1rem;
-      float: right;
-      border-radius: .25rem;
-  }
-
   .locale {
-    margin-top: 1rem;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
 
-    img {
-      margin-right: 1rem;
-      height: 10rem;
-    }
-
-    div {
-      width: 100%;
-    }
-
-    button {
-      margin-top: 1rem;
-      font-size: 1.15rem;
-      height: 2rem;
-      background-color: var(--button);
+    a {
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      background-color: var(--primary-background);
       color: #ffffff;
       border-radius: 0.25rem;
-      padding: 0.25rem;
+      padding: .5rem .5rem;
+      margin-left: .5rem;
+
+      svg {
+        margin-right: .25rem;
+      }
+    }
+  }
+
+  .action {
+    background: var(--primary-background);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-background);
+    font-size: 1.25rem;
+    transition: all .2s;
+    margin-top: 1rem;
+    padding: .25rem 1rem; 
+    border-radius: .15rem;
+
+    &:hover {
+      background: transparent;
+      color: var(--secondary-color);
     }
   }
 `;

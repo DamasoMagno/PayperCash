@@ -1,70 +1,59 @@
+import { useEffect, useState } from "react";
 import { FiMail, FiLock } from "react-icons/fi";
-import { useForm } from "react-hook-form";
+import { MdOutlineArrowForwardIos } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../../services/api";
+import { useForm } from "react-hook-form";
 import { useCookies } from "react-cookie";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { api } from "../../services/api";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { throwToast } from "../../utils/Toastify";
+import { throwToastError } from "../../utils/toastifyMessages";
 
-import { Button } from "../../components/Form/Button";
 import { Input } from "../../components/Form/Input";
+import { Button } from "../../components/Form/Button";
 
-import { Container, Background, Form } from "./styles";
+import { Container, Background, Content, Form } from "./styles";
 
-import signUpImage from "../../assets/signUp.png";
-
-type User = {
+type UserLogin = {
   email: string;
   senha: string;
 };
 
-export type Error = {
-  response: {
-    data: string;
-    status: number;
-  }
-};
-
-const schema = yup.object({
-  email: yup.string().required("Email obrigatório").email("Email inválido"),
-  senha: yup.string().required("Senha obrigatória").min(6, "Minimo de 6 caracteres aeitos")
-}).required();
+const schemaValidator = yup
+  .object({
+    email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
+    senha: yup
+      .string()
+      .required("Senha obrigatória")
+      .min(6, "Minimo 6 caracteres"),
+  })
+  .required();
 
 export function SignIn() {
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<User>({
-    resolver: yupResolver(schema)
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<UserLogin>({
+    resolver: yupResolver(schemaValidator),
   });
-  const [ , setCookies, ] = useCookies(["token"]);
 
-  async function handleSignUser(data: User) {
+  const [cookie, setCookie] = useCookies(["token"]);
+  
+  async function handleSignUser(data: UserLogin) {
     try {
-      const response = await api.post("/gerente/login", { ...data });
-      setCookies("token", response.data, undefined);
+      const response = await api.post(`/gerentes/login`, {...data});
+      setCookie("token", response.data, undefined);
       navigate("/ocurrencies");
     } catch (error) {
-      const signError = error as Error;
-      switch(signError.response.status){
-        case 404:
-          throwToast({
-            message: signError.response.data,
-            type: "error",
-          });
-        break;
-        default:
-          console.log("Nenhum desses erros");
-      }
+      throwToastError(error);
     }
   }
 
   return (
     <div>
       <Container>
-        <Form>
-          <form onSubmit={handleSubmit(handleSignUser)}>
+        <Content>
+          <Form onSubmit={handleSubmit(handleSignUser)}>
             <h2>Entrar</h2>
             <Input
               icon={FiMail}
@@ -76,19 +65,16 @@ export function SignIn() {
               icon={FiLock}
               register={() => register("senha")}
               isPassword
-              error={errors.senha}
-
               placeholder="Senha"
+              error={errors.senha}
             />
-
-            <Button title="Login" />
-          </form>
-
+            <Button title="Login" isLoading={isSubmitting} />
+          </Form>
           <Link to="/signUp">
-            <img src={signUpImage} alt="Criar Conta" />
+            <MdOutlineArrowForwardIos color="var(--secondary-color)" size={16} />
             Criar Conta
           </Link>
-        </Form>
+        </Content>
         <Background />
       </Container>
     </div>

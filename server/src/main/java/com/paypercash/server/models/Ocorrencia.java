@@ -24,18 +24,31 @@ public class Ocorrencia implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String titulo;
+	
+	private String descricao;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	private String tipo_categoria;
+
+	private String resolucao;
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dataCriacao = LocalDateTime.now();
+	
+	private OcurrencyStatus status = OcurrencyStatus.PEDENTE;
+	
+	@ManyToOne
 	@JoinColumn(name = "gerente_ocorrencia_id")
 	@JsonIgnore
 	private GerenteOcorrencias gerenteOcorrencias;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
 	private Empresa empresa;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "tecnico_id")
 	@JsonIgnore
 	private Tecnico tecnico;
@@ -44,19 +57,6 @@ public class Ocorrencia implements Serializable {
 	@JoinColumn(name = "categoria_ocorrencia_id")
 	@JsonIgnore
 	private CategoriaOcorrencia categoriaOcorrencia;
-
-	private String tipo_categoria;
-
-	private String titulo;
-
-	private String descricao;
-
-	private String resolucao;
-
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime dataCriacao = LocalDateTime.now();
-	
-	private OcurrencyStatus status = OcurrencyStatus.PEDENTE;
 
 	public Long getId() {
 		return this.id;
@@ -138,6 +138,10 @@ public class Ocorrencia implements Serializable {
 		return dataCriacao;
 	}
 
+	public void setDataCriacao(LocalDateTime dataCriacao) {
+		this.dataCriacao = dataCriacao;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -154,5 +158,4 @@ public class Ocorrencia implements Serializable {
 		Ocorrencia other = (Ocorrencia) obj;
 		return Objects.equals(id, other.id);
 	}
-
 }

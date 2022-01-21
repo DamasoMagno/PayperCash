@@ -1,29 +1,22 @@
 import styled from "styled-components";
-import { darken } from "polished";
 
 export const Buttons = styled.div`
   display: flex;
   justify-content: end;
   padding-top: 1rem;
 
-  button,
-  a {
+  button, a {
     border-radius: 999999px;
-    background: #eeeeee;
-    color: var(--text);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
     height: 2.5rem;
     padding: 0 1rem;
     font-size: 1rem;
     font-weight: bold;
-    border: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: background 0.2s;
-
-    &:hover {
-      background: ${darken(0.1, "#eee")};
-    }
 
     svg, img {
       margin-right: 0.5rem;
@@ -32,6 +25,7 @@ export const Buttons = styled.div`
   }
 
   button {
+    background: transparent;
     margin-right: 1rem;
   }
 `;
@@ -42,11 +36,12 @@ export const Content = styled.main`
   padding: 0 1rem;
 `;
 
-export const HistoricCalls = styled.div`
+export const CallHistory = styled.div`
   div.period {
     > p {
       font-weight: 600;
       padding-bottom: 1rem;
+      color: #333;
       border-bottom: 1px solid rgba(0, 0, 0, 0.25);
     }
 
@@ -67,8 +62,8 @@ export const Ocurrency = styled.div`
     align-items: center;
     opacity: 0.7;
 
-    img {
-      margin-right: 0.5rem;
+    svg {
+      margin-right: .25rem;
     }
 
     span {
@@ -82,14 +77,14 @@ export const Ocurrency = styled.div`
     margin-left: 1rem;
     padding: 1rem;
     border-radius: 0.4rem;
-    background: #3e3b47;
+    background: var(--secondary-background);
     flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     p {
-      color: #fff;
+      color: #333;
       word-break: break-all;
       font-size: 1.25rem;
       margin-right: 0.5rem;
@@ -97,12 +92,12 @@ export const Ocurrency = styled.div`
   }
 
   @media (max-width: 720px) {
-    margin-top: 0.5rem;
+    margin-top: .85rem;
     display: flex;
     flex-direction: column;
     align-items: stretch;
 
-    div.titleCall {
+    a.titleCall {
       margin: 0.5rem 0 0.5rem;
     }
   }
@@ -110,7 +105,7 @@ export const Ocurrency = styled.div`
 
 export const RecentCall = styled.div`
   background: #eee;
-  color: var(--heading);
+  color: #333;
   border-radius: 0.25rem;
   margin: -3rem 0 3rem;
   padding: 1rem;
@@ -118,11 +113,12 @@ export const RecentCall = styled.div`
   header {
     p {
       font-weight: 600;
+      color: rgba(0,0, 0, .5);
       font-size: 1rem;
     }
   }
 
-  div {
+  a {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -130,9 +126,10 @@ export const RecentCall = styled.div`
 
     strong {
       margin-top: 0.25rem;
-      line-height: 3rem;
+      line-height: 2.5rem;
       font-size: 1.25rem;
       font-weight: 700;
+      color: #333;
     }
   }
 `;

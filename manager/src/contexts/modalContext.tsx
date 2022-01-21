@@ -1,16 +1,10 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 
-type User = {
-  id: string;
-  nome: string;
-  email: string;
-  senha: string;
-  endereco: string;
-};
-
 interface modalContextProps {
   modalOpenCallIsOpen: boolean;
   setModalOpenCallIsOpen: (modal: boolean) => void;
+  modalRemoveCall: boolean;
+  setModalRemoveCall: (modal: boolean) => void;
 }
 interface AppProps {
   children: ReactNode;
@@ -18,12 +12,13 @@ interface AppProps {
 
 export const modalContext = createContext({} as modalContextProps);
 
-export function AppProvider({ children }: AppProps) {
+export function ModalProvider({ children }: AppProps) {
   const [modalOpenCallIsOpen, setModalOpenCallIsOpen] = useState(false);
+  const [ modalRemoveCall, setModalRemoveCall ] = useState(false);
 
   return (
     <modalContext.Provider
-      value={{ modalOpenCallIsOpen, setModalOpenCallIsOpen }}
+      value={{ modalOpenCallIsOpen, setModalOpenCallIsOpen, modalRemoveCall, setModalRemoveCall }}
     >
       {children}
     </modalContext.Provider>

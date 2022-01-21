@@ -1,82 +1,87 @@
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { MdArrowForwardIos } from "react-icons/md";
+import { FiClock } from "react-icons/fi";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { Ocurrency as OcurrencyType } from "../../interfaces";
 
 import { formatOcurrencies } from "../../utils/formatOcurrencies";
 
-import { Filters } from "../../components/Filters";
 import { SideBar } from "../../components/SideBar";
+import { useAuth } from "../../contexts/authContext";
+import { InputSearch } from "../../components/Form/InputSearch";
 
 import { Container, Period, Ocurrency, Content } from "./styles";
 
-import scheduleImage from "../../assets/schedule.svg";
-import showOcurrencyImage from "../../assets/showOcurrency.png";
-import { useCookies } from "react-cookie";
-import { Ocurrency as OcurrencyType } from "../../interfaces";
-
-type OcurrencyFormated = Pick<OcurrencyType, "id" | "dataCriacao" | "titulo">;
+type OcurrencyFormated = Pick<OcurrencyType, "id" | "dataCriacao" | "titulo" | "tecnico">;
 
 export function Ocurrencies() {
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { status } = useParams();
+  const { logoutUser, user } = useAuth();
 
-  const [ ocurrencies, setOcurrencies ] = useState<OcurrencyFormated[]>([]);
-  const [ cookie, setCooke, removeCookie ] = useCookies(["token"]);
+  const [ocurrencies, setOcurrencies] = useState<OcurrencyFormated[]>([]);
 
   useEffect(() => {
-    api.get("/empresas", {  headers: { token: cookie.token }})
-      .then(response => {
-        const ocurrenciesFormatted = response.data.ocorrencias 
-              .map((ocorrencia: OcurrencyType) => formatOcurrencies(ocorrencia));
+    api
+      .get(`/ocorrencias`)
+      .then((response) => {
+        const ocurrenciesFormatted = response.data.map(
+          (ocorrencia: OcurrencyType) => formatOcurrencies(ocorrencia)
+        );
         setOcurrencies(ocurrenciesFormatted);
-      }).catch(() => {
-        navigate("/");
-        removeCookie("token");
-      });
-  }, []);
+      })
+      .catch(logoutUser);
+  }, [pathname]);
 
-  const filterByResolucaoConcluida = ocurrencies.filter((ocurrency: any) => {
-    return ocurrency.status === "CONCLUIDO";
+  const ocurrenciesFinished = ocurrencies.filter((ocurrency: any) => {
+    return ocurrency.status === "CONLUIDO";
   });
 
-  const ocorrenciasPendentes = ocurrencies.filter((ocurrency: any) => {
+  const ocurrenciesPendents = ocurrencies.filter((ocurrency: any) => {
     return ocurrency.status === "PEDENTE";
   });
+
+
 
   return (
     <Container>
       <SideBar />
 
       <Content>
-        <Filters />
+        <InputSearch title="Procurar ocorrencia" />
+
         <main>
           <Period>
-            <h3>Hoje</h3>
+            <h3>Janeiro - 2021</h3>
             {status === "finished" ? (
-              filterByResolucaoConcluida.map( (ocurrencias: OcurrencyFormated) => (
-                <Ocurrency key={ocurrencias.id}>
-                <div className="scheduleCall">
-                  <img src={scheduleImage} alt="Horário da chamada" />
-                  <span>{ocurrencias.dataCriacao}</span>
-                </div>
-                <Link className="title" to={`/ocurrency/${ocurrencias.id}`}>
-                  <p>{ocurrencias.titulo}</p>
-                  <img src={showOcurrencyImage} alt="Ir para a ocorrência" />
-                </Link>
-              </Ocurrency>
+              ocurrenciesFinished.map((ocurrency) => (
+                <Ocurrency key={ocurrency.id}>
+                  <div className="scheduleCall">
+                    <FiClock color="#333" size={16} />
+                    <span>{ocurrency.dataCriacao.padEnd(5, "0")}</span>
+                  </div>
+                  <Link className="title" to={`/ocurrency/${ocurrency.id}`}>
+                    <p>{ocurrency.titulo}</p>
+                    <MdArrowForwardIos color="#333" size={18} />
+                  </Link>
+                </Ocurrency>
               ))
             ) : (
-              ocorrenciasPendentes.map((ocorrencias: OcurrencyFormated) => (
-                <Ocurrency key={ocorrencias.id}>
-                <div className="scheduleCall">
-                  <img src={scheduleImage} alt="Horário da chamada" />
-                  <span>{ocorrencias.dataCriacao}</span>
-                </div>
-                <Link className="title" to={`/ocurrency/${ocorrencias.id}`}>
-                  <p>{ocorrencias.titulo}</p>
-                  <img src={showOcurrencyImage} alt="Ir para a ocorrência" />
-                </Link>
-              </Ocurrency>
+              ocurrenciesPendents.map((ocurrency) => (
+                <Ocurrency 
+                  key={ocurrency.id} 
+                  otherTechncian={ocurrency.tecnico !== user.nome}
+                >
+                  <div className="scheduleCall">
+                    <FiClock color="#333" size={16} />
+                    <span>{ocurrency.dataCriacao.padEnd(4, "0")}</span>
+                  </div>
+                  <Link className="title" to={`/ocurrency/${ocurrency.id}`}>
+                    <p>{ocurrency.titulo}</p>
+                    <MdArrowForwardIos color="#333" size={18} />
+                  </Link>
+                </Ocurrency>
               ))
             )}
           </Period>

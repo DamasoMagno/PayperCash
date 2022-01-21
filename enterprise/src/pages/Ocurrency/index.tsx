@@ -1,8 +1,8 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useModals } from "../../contexts/modalsContext";
-import { Ocurrency as OcurrencyType } from "../../interfaces";
-import { useCookies } from "react-cookie";
+import { Ocurrency as OcurrencyType, User } from "../../interfaces";
+import { MdOutlinePlace, MdPlace } from "react-icons/md";
 import { useAuth } from "../../contexts/authContext";
 import { api } from "../../services/api";
 
@@ -11,23 +11,61 @@ import { SideBar } from "../../components/SideBar";
 import { FinishedModalOcurrency } from "../../components/Modals/FinishedOcurrencyModal";
 
 import { Container, Divider, Content } from "./styles";
-
-import localizationImage from "../../assets/localization.png";
+import { useCookies } from "react-cookie";
+import { throwToastError } from "../../utils/toastify";
 
 export function Ocurrency() {
-  const { user } = useAuth();
+  const { user, logoutUser } = useAuth();
   const { id } = useParams();
 
   const { setModalFinishedOcurrencyIsOpen } = useModals();
 
-  const [techinician, setTechinician] = useState("");
   const [resolution, setResolution] = useState("");
-  const [ ocurrency, setOcurreny] = useState({} as OcurrencyType);
+  const [ technician, setTechnician ] = useState("");
+  const [ocurrency, setOcurreny] = useState({} as OcurrencyType);
+  const [cookies] = useCookies(["token"]);
+
+  const months = [
+    "Janeiro",
+    "Fervereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ];
 
   useEffect(() => {
-    api.get(`/ocorrencias/${user.id}`)
-      .then(response => setOcurreny(response.data));
+    api
+      .get(`/ocorrencias/${id}`)
+      .then((response) => setOcurreny(response.data))
+      .catch((error) => console.log(error.response));
   }, []);
+
+  const formatData = () => {
+    const formattedData =
+      new Date(ocurrency.dataCriacao).getDate() +
+      " de " +
+      months[new Date(ocurrency.dataCriacao).getMonth()] +
+      " de " +
+      new Date(ocurrency.dataCriacao).getFullYear();
+
+    return formattedData;
+  };
+
+  async function handleTOcurrency() {
+    try {
+      const response = await api.put(`/ocorrencias/direcionar/${id}`);
+      setTechnician(response.data.tecnico);
+    } catch (error) {
+      throwToastError(error, logoutUser);
+    }
+  }
 
   return (
     <Container>
@@ -37,51 +75,50 @@ export function Ocurrency() {
         <header>
           <small>Detalhes do chamado</small>
           <strong>{ocurrency.titulo}</strong>
-          <p>Chamado aberto em 09 de janeiro de 2021 as 15:30</p>
+          <p>Chamado aberto em {formatData()}</p>
           <Divider>
             <span />
-            <div className={id === "1" ? "concluded" : "pendent"}>
-              <p>{ocurrency.status?.toLowerCase()}</p>
+            <div
+              className={
+                ocurrency.status === "CONCLUIDO" ? "concluded" : "pendent"
+              }
+            >
+              <p>{ocurrency.status}</p>
             </div>
           </Divider>
         </header>
         <main>
-          <Field label="Solicitante" value="Maria Gonçalvez" />
+          <Field label="Solicitante" value={ocurrency.gerente} />
+          <Field label="Título" value={ocurrency.titulo} />
+          <Field label="Descrição" value={ocurrency.descricao} />
           <Field
-            label="Título"
-            value={ocurrency.titulo}
+            label="Resolutividade"
+            value={ocurrency.resolucao ?? resolution}
           />
-          <Field
-            label="Descrição"
-            value={ocurrency.descricao}
-          />
-          <Field label="Resolutividade" value={ocurrency.resolucao} />
-          <Field label="Técnico" value={techinician} />
+          <Field label="Técnico" value={ocurrency.tecnico ?? technician} />
           <div className="locale">
-            <img src={localizationImage} alt="Localização do Gerente" />
-            <div>
-              <Field label="Endereço" value="Ana Luíza Braga, 1881" />
-              <button>
-                <p>Localização</p>
-              </button>
-            </div>
+            <Field label="Endereço" value={ocurrency.endereco} />
+            <a href="#">
+              <MdOutlinePlace color="#FFF" size={18} />
+              <p>Localização</p>
+            </a>
           </div>
-        </main>
-        {user.perfil === "TECNICO" &&
-          ( ocurrency.status === "PENDENTE" ? (
-            <button onClick={() => setTechinician("Damaso")} className="action">
-              Prestar Suporte
-            </button>
-          ) : (
-            !resolution && (
-              <button
-                onClick={() => setModalFinishedOcurrencyIsOpen(true)}
-                className="action"
-              >
-                Finalizar Chamado
+          {(user.perfil === "TECNICO") &&
+            (!ocurrency.tecnico ? (
+              <button className="action" onClick={handleTOcurrency}>
+                Direcionar Chamado
               </button>
-            )
-          ))}
+            ) : (
+              !ocurrency.resolucao && (
+                <button
+                  className="action"
+                  onClick={() => setModalFinishedOcurrencyIsOpen(true)}
+                >
+                  Finalizar Ocorrencia
+                </button>
+              )
+            ))}
+        </main>
       </Content>
       <FinishedModalOcurrency setResolution={setResolution} />
     </Container>

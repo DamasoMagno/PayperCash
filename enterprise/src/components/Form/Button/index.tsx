@@ -11,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLElement> {
 export function Button({ title, isLoading, ...rest }: ButtonProps) {
   return (
     <Container disabled={isLoading} {...rest}>
-      {isLoading ? <CircleSpinner color="#000" size={22}/> : title}
+      {isLoading ? <CircleSpinner color="#FFF" size={22}/> : title}
     </Container>
   );
 }

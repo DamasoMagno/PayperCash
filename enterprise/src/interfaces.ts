@@ -4,6 +4,9 @@ export type Ocurrency = {
   descricao: string;
   dataCriacao: string;
   resolucao: string;
+  tecnico: string;
+  gerente: string;
+  endereco: string;
   tipo_categoria: string;
   status: "PENDENTE" | "CONCLUIDO";
 }
@@ -14,6 +17,7 @@ export type User = {
   nome: string;
   senha: string;
   endereco?: string;
+  ocorrencias: Ocurrency[];
   perfil: "EMPRESA" | "TECNICO";
 };
 

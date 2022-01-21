@@ -5,6 +5,9 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Container } from "./styles";
+// import { showError } from "../../../utils/showError";
+import { Input } from "../../Form/Input";
+import { throwToastError } from "../../../utils/toastify";
 
 type TechnicianInput = Omit<User, "id">;
 
@@ -16,25 +19,20 @@ type TechnicianModalProps = {
 
 const schemaValidation = yup
   .object({
-    nome: yup
-      .string()
-      .required("Nome obrigatório"),
-    email: yup
-      .string()
-      .required("Email obrigatório")
-      .email("Email inválido"),
+    nome: yup.string().required("Nome obrigatório"),
+    email: yup.string().required("Email obrigatório").email("Email inválido"),
     senha: yup
       .string()
       .required("Senha obrigatória")
       .min(6, "Tamanho minimo  6 letras"),
-}).required();
+  })
+  .required();
 
 export function CreateTechnicianModal({
   isOpen,
   onRequestClose,
   onCreateNewTechnician,
 }: TechnicianModalProps) {
-
   const {
     register,
     handleSubmit,
@@ -48,7 +46,7 @@ export function CreateTechnicianModal({
       await onCreateNewTechnician(data);
       onRequestClose();
     } catch (error) {
-      console.log(error);
+      throwToastError(error);
     }
   }
 
@@ -61,23 +59,24 @@ export function CreateTechnicianModal({
     >
       <Container onSubmit={handleSubmit(handleCreateUser)}>
         <h2>Cadastrar Tecnico</h2>
-        <div className="input">
-          <label htmlFor="inputNome">Nome</label>
-          <input id="inputNome" {...register("nome")} />
-          {errors.nome?.message && <p>{errors.nome?.message}</p>}
-        </div>
-        <div className="input">
-          <label htmlFor="inputEmail">Email</label>
-          <input id="inputEmail" type="email" {...register("email")} />
-          {errors.email?.message && <p>{errors.email?.message}</p>}
-        </div>
-        <div className="input">
-          <label htmlFor="inputPassword">Senha</label>
-          <input id="inputPassword" type="password" {...register("senha")} />
-          {errors.senha?.message && <p>{errors.senha?.message}</p>}
-        </div>
+        <Input
+          placeholder="Nome"
+          register={() => register("nome")}
+          error={errors.nome}
+        />
+        <Input
+          placeholder="Email"
+          register={() => register("email")}
+          error={errors.email}
+        />
+        <Input
+          placeholder="Senha"
+          isPassword
+          register={() => register("senha")}
+          error={errors.senha}
+        />
         <div className="buttons">
-          <button type="button" onClick={onRequestClose}>
+          <button type="button" onClick={onRequestClose} className="cancel">
             Cancelar
           </button>
           <button className="create">Cadastrar</button>

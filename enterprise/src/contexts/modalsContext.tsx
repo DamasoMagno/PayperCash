@@ -4,6 +4,8 @@ interface modalContextProps {
   modalEnterpriseIsOpen: boolean;
   modalFinishedOcurrencyIsOpen: boolean;
   modalCreateTechcnianIsOpen: boolean;
+  modalRemoveDataIsOpen: boolean;
+  setModalRemoveDataIsOpen(isOpen: boolean): void;
   setModalEnterpriseIsOpen(isOpen: boolean): void;
   setModalFinishedOcurrencyIsOpen(isOpen: boolean): void;
   setModalCreateTechnicinIsOpen(isOpen: boolean): void;
@@ -16,9 +18,10 @@ interface ModalProviderProps {
 }
 
 export function ModalsProvider({ children }: ModalProviderProps) {
-  const [modalEnterpriseIsOpen, setModalEnterpriseIsOpen] = useState(false);
-  const [modalFinishedOcurrencyIsOpen, setModalFinishedOcurrencyIsOpen] = useState(false);
-  const [modalCreateTechcnianIsOpen, setModalCreateTechnicinIsOpen] = useState(false);
+  const [ modalEnterpriseIsOpen, setModalEnterpriseIsOpen] = useState(false);
+  const [ modalFinishedOcurrencyIsOpen, setModalFinishedOcurrencyIsOpen ] = useState(false);
+  const [ modalCreateTechcnianIsOpen, setModalCreateTechnicinIsOpen ] = useState(false);
+  const [ modalRemoveDataIsOpen, setModalRemoveDataIsOpen ] = useState(false);
 
   return (
     <modalsContext.Provider
@@ -26,6 +29,8 @@ export function ModalsProvider({ children }: ModalProviderProps) {
         modalEnterpriseIsOpen,
         modalFinishedOcurrencyIsOpen,
         modalCreateTechcnianIsOpen,
+        modalRemoveDataIsOpen,
+        setModalRemoveDataIsOpen,
         setModalEnterpriseIsOpen,
         setModalFinishedOcurrencyIsOpen,
         setModalCreateTechnicinIsOpen,

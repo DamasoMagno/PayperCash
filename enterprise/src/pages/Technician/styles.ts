@@ -2,12 +2,17 @@ import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   display: flex;
+
+  @media(max-width: 720px){
+    flex-direction: column;
+  }
 `;
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  width: 800px;
+  max-width: 800px;
+  width: 100%;
   margin: 1rem auto;
 
   h1 {
@@ -46,39 +51,30 @@ export const Content = styled.div`
   }
 `;
 
-export const Status = styled.div`
+export const Delete = styled.button`
+  border: 1px solid #FF0000;
+  background: transparent;
+  color: red;
   display: flex;
-  border-radius: 15px;
-  padding: 0rem 0.5rem;
+  justify-content: center;
   align-items: center;
-  font-size: .85rem;
+  padding: .4rem 1rem;
+  border-radius: .25rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all .5s;
 
-  & + div {
-    margin-left : .5rem;
+  svg {
+    margin-right: .25rem;
   }
 
-  &.pendents {
-    border: 1px solid rgba(255, 0, 0, .5);
-    color: rgba(255, 0, 0, .5);
-    
-    span {
-      background: rgba(255, 0, 0, .5);
+  &:hover {
+    background: #FF0000;
+    color: #FFF;
+
+    svg {
+      color: #FFF;
     }
-  }
-
-  &.finished {
-    border: 1px solid rgba(0, 255, 0, .5);
-    color: rgba(0, 255, 0, .5);
-
-    span {
-      background: rgba(0, 255, 0, .5);
-    }
-  }
-
-  span {
-    height: 50%;
-    width: 2px;
-    border-radius: 999px;
-    margin: 0 8px;
   }
 `;

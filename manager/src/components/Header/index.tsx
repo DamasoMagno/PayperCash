@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { Container, Content } from "./styles";
 
 type Header = {
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 export function Header({ children }: Header) {

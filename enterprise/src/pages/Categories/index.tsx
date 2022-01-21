@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { MdAdd } from "react-icons/md";
 import { api } from "../../services/api";
 import { useAuth } from "../../contexts/authContext";
 import { Ocurrency } from "../../interfaces";
+import { FiAlertTriangle } from "react-icons/fi";
 
-import { showError } from "../../utils/showError";
+import { throwToastError } from "../../utils/toastify";
 
 import { Item as Category } from "../../components/Item";
 import { SideBar } from "../../components/SideBar";
@@ -19,23 +19,23 @@ type Category = {
 
 export function Categories() {
   const { logoutUser } = useAuth();
-
+  
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategory, setNewCategory] = useState("");
-  const [error, setError] = useState("");
 
   useEffect(() => {
-    api.get<Category[]>("/categorias")
-      .then((res) => setCategories(res.data));
+    api.get<Category[]>("/categorias/todas")
+      .then((res) => setCategories(res.data))
+      .catch(logoutUser);
   }, []);
 
   async function handleCreateNewCategory() {
-    if (!newCategory) return setError("Campo obrigatório");
     try {
       const { data } = await api.post("/categorias", { nome: newCategory });
+      setNewCategory("");
       setCategories([...categories, data]);
     } catch (error) {
-      showError(error, logoutUser);
+      throwToastError(error, logoutUser);
     }
   }
 
@@ -49,18 +49,15 @@ export function Categories() {
             <div>
               <input
                 id="newCategory"
+                value={newCategory}
                 onChange={(e) => {
-                  setError("");
                   setNewCategory(e.target.value);
                 }}
               />
               <label htmlFor="newCategory">Nova Categoria</label>
             </div>
-            <button onClick={handleCreateNewCategory}>
-              <MdAdd color="#FFF" size={24} />
-            </button>
+            <button onClick={handleCreateNewCategory}>Adicionar</button>
           </div>
-          {error && <p>{error}</p>}
         </NewCategory>
 
         <Historic>
@@ -71,7 +68,8 @@ export function Categories() {
               key={category.id}
               title={category.nome}
               router={`/category/${category.id}`}
-              subtitle={`Ocorrencias: ${category.ocorrencia?.length ?? 0}`}
+              icon={FiAlertTriangle}
+              subtitle={category.ocorrencia?.length.toString() ?? 0}
             />
           ))}
         </Historic>

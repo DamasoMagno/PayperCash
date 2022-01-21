@@ -2,11 +2,10 @@ import styled from "styled-components";
 
 export const Container = styled.form`
   max-width: 90%;
-  margin: 0 auto;
   text-align: center;
-  padding: 1rem 0 2rem;
+  margin: 0 auto;
 
-  h1 {
+  h2 {
     margin: 1rem 0 1.5rem;
   }
 
@@ -23,7 +22,7 @@ export const Container = styled.form`
       font-weight: 500;
 
       &.edit {
-        background-color: var(--primary-button);
+        background-color: var(--primary-background);
         color: var(--primary-color);
       }
     }

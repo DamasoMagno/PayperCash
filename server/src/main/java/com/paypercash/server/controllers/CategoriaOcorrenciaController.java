@@ -2,9 +2,18 @@ package com.paypercash.server.controllers;
 
 import java.util.List;
 
-import com.paypercash.server.models.CategoriaOcorrencia;
-import com.paypercash.server.repository.CategoriaOcorrenciaRepository;
+import javax.naming.NoPermissionException;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 
+import com.paypercash.server.models.CategoriaOcorrencia;
+import com.paypercash.server.security.JwtUtil;
+import com.paypercash.server.services.CategoriaOcorrenciaService;
+import com.paypercash.utils.handlerErrors;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -25,63 +34,109 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/categorias")
 @Api(value = "Categoria")
-public class CategoriaOcorrenciaController {
+public class CategoriaOcorrenciaController extends handlerErrors {
 
+	private final String errorUnauthorizedessage = "Refaça seu login, para visualizar seus dados ";
 	private final String errorNotFoundMessage = "Nenhuma categoria, cadastrada com este id";
 	
 	@Autowired
-	private CategoriaOcorrenciaRepository categoriaOcorrenciaRepository;
+	private CategoriaOcorrenciaService categoriaOcorrenciaService;
 
-	@GetMapping
-	@ApiOperation(value = "Esta rota, exibe todas as categorias cadastradas")
-	public List<CategoriaOcorrencia> listarCategorias() {
-		return categoriaOcorrenciaRepository.findAll();
+	@GetMapping("/todas")
+	@ApiOperation(value = "Exibe todas as categorias cadastradas")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Dados exibidos com sucesso"),
+			@ApiResponse(code = 401, message = errorUnauthorizedessage),
+			@ApiResponse(code = 403, message = errorNotPermission),
+			@ApiResponse(code = 500, message = errorTokenNotIndentifiedMessage),
+	})
+	public ResponseEntity<?> listarCategorias(HttpServletRequest request) {
+		try {
+			Claims token = JwtUtil.decodeJWT(request);
+			List<CategoriaOcorrencia> categorias = categoriaOcorrenciaService.exibirTodasAsCategorias(token);
+			return ResponseEntity.status(HttpStatus.OK).body(categorias);
+		} catch (NullPointerException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorTokenNotIndentifiedMessage);
+		}  catch (ExpiredJwtException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorUnauthorizedessage);
+		}  catch (NoPermissionException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+		}
 	}
 
 	@GetMapping("/{id}")
-	@ApiOperation(value = "Esta rota, exibe determinda categoria com base em seu id")
+	@ApiOperation(value = "Exibe a categoria cadastrada com esse id")
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Dados, exibidos com sucesso" ),
-			@ApiResponse(code = 404, message = errorNotFoundMessage ),
+			@ApiResponse(code = 200, message = "Dados exibidos com sucesso"),
+			@ApiResponse(code = 401, message = errorUnauthorizedessage),
+			@ApiResponse(code = 403, message = errorNotPermission),
+			@ApiResponse(code = 404, message = errorNotFoundMessage),
+			@ApiResponse(code = 500, message = errorTokenNotIndentifiedMessage),
 	})
-	public ResponseEntity<?> listarCategoria(@PathVariable Long id) {
+	public ResponseEntity<?> listarCategoria(HttpServletRequest request, @PathVariable Long id) {
 		try {
-			CategoriaOcorrencia categoriaEncontrada = categoriaOcorrenciaRepository.findById(id).get();
+			Claims token = JwtUtil.decodeJWT(request);
+			CategoriaOcorrencia categoriaEncontrada = categoriaOcorrenciaService.exibirCategoria(token, id);
 			return ResponseEntity.status(HttpStatus.OK).body(categoriaEncontrada);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorNotFoundMessage);
+		} catch (NullPointerException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorTokenNotIndentifiedMessage);
+		}  catch (ExpiredJwtException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorUnauthorizedessage);
+		}  catch (NoPermissionException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
 
 	@PostMapping
-	@ApiOperation(value = "Essa rota, realiza o cadastro de uma nova categoria no sistema")
+	@ApiOperation(value = "Realiza o cadastro de uma nova categoria no sistema")
 	@ApiResponses(value = {
-			@ApiResponse(code = 201, message = "Tecnico criado com sucesso"),
-			@ApiResponse(code = 400, message = "Não é possível cadastrar, duas ocorrencias iguais"),
+			@ApiResponse(code = 201, message = "Categoria criada com sucesso"),
+			@ApiResponse(code = 400, message = "Não é possível cadastrar duas ocorrencias iguais"),
+			@ApiResponse(code = 401, message = errorUnauthorizedessage),
+			@ApiResponse(code = 403, message = errorNotPermission),
+			@ApiResponse(code = 500, message = errorTokenNotIndentifiedMessage),
 	})
-	public ResponseEntity<?> criarCategoria(@RequestBody CategoriaOcorrencia categoriaOcorrencia) {
-		CategoriaOcorrencia categoriaJaExiste = categoriaOcorrenciaRepository.findByNome(categoriaOcorrencia.getNome());
-		
-		if (categoriaJaExiste != null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é possível cadastrar, duas ocorrencias iguais");
+	public ResponseEntity<?> criarCategoria(
+			HttpServletRequest request, 
+			@RequestBody CategoriaOcorrencia categoriaOcorrencia
+	) throws NoPermissionException {
+		try {
+			Claims token = JwtUtil.decodeJWT(request);
+			CategoriaOcorrencia novaCategoria = categoriaOcorrenciaService.criarCatgoria(categoriaOcorrencia, token);
+			return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
+		} catch (NullPointerException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorTokenNotIndentifiedMessage);
+		} catch (ExpiredJwtException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorUnauthorizedessage);
+		} catch (EntityExistsException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		} catch (NoPermissionException e) { 
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
 		}
-		
-		CategoriaOcorrencia novaCategoria = categoriaOcorrenciaRepository.save(categoriaOcorrencia);
-		return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
 	}
 
 	@DeleteMapping("/{id}")
-	@ApiOperation(value = "Esta rota, realiza a deleção de uma categoria com base em seu id, do sistema")
+	@ApiOperation(value = "Realiza a remoção da categoria cadastrada com esse id")
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Dados removidos com sucesso" ),
-			@ApiResponse(code = 404, message = errorNotFoundMessage )
+			@ApiResponse(code = 200, message = "Categoria removida com sucesso"),
+			@ApiResponse(code = 401, message = errorUnauthorizedessage),
+			@ApiResponse(code = 403, message = errorNotPermission),
+			@ApiResponse(code = 404, message = errorNotFoundMessage),
+			@ApiResponse(code = 500, message = errorTokenNotIndentifiedMessage),
 	})
-	public ResponseEntity<?> removeCategoria(@PathVariable Long id) throws JSONException {
+	public ResponseEntity<?> removeCategoria(HttpServletRequest request, @PathVariable Long id) throws JSONException, NoPermissionException {		
 		try {
-			categoriaOcorrenciaRepository.deleteById(id);
-			return ResponseEntity.status(HttpStatus.OK).body(null);
-		} catch (Exception e) {			
-		    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorNotFoundMessage);
+			Claims token = JwtUtil.decodeJWT(request);
+			categoriaOcorrenciaService.removerCategoria(token, id);
+			return ResponseEntity.ok().build();
+		} catch (NullPointerException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorTokenNotIndentifiedMessage);
+		} catch (ExpiredJwtException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorUnauthorizedessage);
+		} catch (EntityNotFoundException e) {			
+		    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
 }

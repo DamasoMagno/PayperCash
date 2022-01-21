@@ -1,20 +1,20 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { api } from "../services/api";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-
-type User = {
-  id: number;
-  email: string;
-  nome: string;
-  senha: string;
-  endereco?: string;
-  perfil: "EMPRESA" | "TECNICO";
-};
+import { User } from "../interfaces";
+import { api } from "../services/api";
 
 type authContext = {
   user: User;
   logoutUser: () => void;
+  accountSelecioned: string;
+  setAccountSelecioned: (type: string) => void;
 };
 
 interface AuthProviderProps {
@@ -27,27 +27,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const isLoginPageOrSignPage = pathname ===  "/" || pathname === "/signUp";
+  const isSignPage = 
+  pathname === "/" 
+  || pathname === "/signUp" 
+  || pathname === "/reset";
 
-  const [ user, setUser ] = useState({} as User);
-  const [ cookie, , removeCookie ] = useCookies(["token"]);
+  const [user, setUser] = useState({} as User);
+  const [cookies, , removeCookies] = useCookies(["token"]);
+  const [ loading, setIsLoading ] = useState(true);
 
-  const typeAccount = JSON.parse(localStorage.getItem("@type") as string);
+  const [accountSelecioned, setAccountSelecioned] = useState(() => {
+    const typeAccount = JSON.parse(localStorage.getItem("@type") as string);
+    return typeAccount ? typeAccount : "tecnicos";
+  });
 
   useEffect(() => {
-    api
-      .get(`/${typeAccount}`, { headers: { token: cookie.token } })
-      .then((response) => setUser(response.data))
-      .catch(logoutUser);
-  }, [!isLoginPageOrSignPage]);
+    api.defaults.headers.common['Authorization'] = cookies.token;
+
+    if (!isSignPage) {
+      api
+        .get(`/${accountSelecioned}`)
+        .then((response) => {
+          setUser(response.data)
+        })
+        .catch(logoutUser);
+    }
+  }, [pathname]);
 
   function logoutUser() {
-    removeCookie("token");
+    removeCookies("token");
     navigate("/");
   }
 
   return (
-    <authContext.Provider value={{ user, logoutUser }}>
+    <authContext.Provider
+      value={{ user, logoutUser, accountSelecioned, setAccountSelecioned }}
+    >
       {children}
     </authContext.Provider>
   );

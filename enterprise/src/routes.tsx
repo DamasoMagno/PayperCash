@@ -10,12 +10,16 @@ import { Managers } from "./pages/Managers";
 import { Manager } from "./pages/Manager";
 import { Techinicians } from "./pages/Technicians";
 import { Technician } from "./pages/Technician";
+import { ResetPassword } from "./pages/ResetPassword";
+import { AuthProvider } from "./contexts/authContext";
 
 export function AppRoutes() {
   return (
-      <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/signUp" element={<SignUp />} />
+    <Routes>
+      <Route path="/" element={<SignIn />} />
+      <Route path="/signUp" element={<SignUp />} />
+      <Route path="/reset" element={<ResetPassword />} />
+      <AuthProvider>
         <Route path="/ocurrencies/:status" element={<Ocurrencies />} />
         <Route path="/technicians" element={<Techinicians />} />
         <Route path="/categories" element={<Categories />} />
@@ -24,6 +28,7 @@ export function AppRoutes() {
         <Route path="/managers" element={<Managers />} />
         <Route path="/manager/:id" element={<Manager />} />
         <Route path="/category/:id" element={<Category />} />
-      </Routes>
+      </AuthProvider>
+    </Routes>
   );
 }

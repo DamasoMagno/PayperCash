@@ -23,6 +23,7 @@ export const Container = styled.form`
   }
 
   div.buttons {
+    margin-top: 1rem;
     display: flex;
     gap: 1rem;
 
@@ -35,13 +36,14 @@ export const Container = styled.form`
       border-radius: .4rem;
 
       &.cancel {
-        border: 1px solid rgba(51, 51, 51, 1); 
+        border: 1px solid var(--primary-background); 
         background-color: transparent;
+        color: var(--secondary-color);
       }
 
       &.sendOrEdit {
         color: #FFF;
-        background-color: rgba(51, 51, 51, 1);
+        background-color: var(--primary-background);
       }
     }
   }
@@ -51,7 +53,7 @@ export const Field = styled.div`
   position: relative;
 
   & + div {
-    margin: 1.5rem 0 1rem;
+    margin-bottom: 1rem;
   }
 
   label {

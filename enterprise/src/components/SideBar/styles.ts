@@ -4,12 +4,26 @@ export const Container = styled.aside`
   max-width: 15rem;
   width: 100%;
   min-height: 100vh;
-  background: var(--background);
+  background: var(--primary-background);
   padding-right: 1rem;
   padding-top: 1rem;
 
   nav {
     margin-top: 2rem;
+  }
+
+  @media(max-width: 720px) {
+    min-height: 100%;
+    max-width: 100%;
+    border: 1px solid red;
+
+    div.profile {
+      display: none;
+    }
+
+    nav {
+      display: none;
+    }
   }
 `;
 
@@ -26,7 +40,6 @@ export const User = styled.div`
       border: 0;
 
       svg {
-        opacity: 0.5;
         transition: 0.2s opacity;
 
         &:hover {

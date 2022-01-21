@@ -1,6 +1,7 @@
 package com.paypercash.server.services;
 
 import com.paypercash.server.enums.OcurrencyStatus;
+import com.paypercash.server.enums.Perfil;
 import com.paypercash.server.models.CategoriaOcorrencia;
 import com.paypercash.server.models.Empresa;
 import com.paypercash.server.models.GerenteOcorrencias;
@@ -10,16 +11,22 @@ import com.paypercash.server.repository.CategoriaOcorrenciaRepository;
 import com.paypercash.server.repository.EmpresaRepository;
 import com.paypercash.server.repository.GerenteOcorrenciasRepository;
 import com.paypercash.server.repository.OcorrenciaRepository;
-import com.paypercash.server.repository.TecnicoRepository;
+import com.paypercash.server.security.JwtUtil;
+import com.paypercash.utils.handlerErrors;
+
+import io.jsonwebtoken.Claims;
 
 import java.util.List;
-import java.util.Optional;
+
+import javax.naming.NoPermissionException;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OcorrenciaService {
+public class OcorrenciaService extends handlerErrors {
 
 	@Autowired
 	private OcorrenciaRepository ocorrenciaRepository;
@@ -28,24 +35,25 @@ public class OcorrenciaService {
 	@Autowired
 	private CategoriaOcorrenciaRepository categoriaOcorrenciaRepository;
 	@Autowired
-	private TecnicoRepository tecnicoRepository;
+	private TecnicoService tecnicoService;
 	@Autowired
 	private EmpresaRepository empresaRepository;
 
 	public Ocorrencia obterOcorrencia(Long id) {
-		return ocorrenciaRepository.findById(id).get();
+		return ocorrenciaRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(erroNaoEncontrado("Ocorrencia")));
 	}
 
-	public Ocorrencia atenderOcorrencia(Long id, Long userId) throws Exception {
+	public String erroNaoEncontrado(String entidade) {
+		return entidade + " não encontrad" + entidade.charAt(entidade.length() - 1);
+	}
+	
+	public Ocorrencia direcionarOcorrencia(Long id, Long userId) throws Exception {
 		Ocorrencia ocorrenciaExiste = obterOcorrencia(id);
-		Tecnico tecnicoEncontrado = tecnicoRepository.findById(userId).get();
-
-		if (ocorrenciaExiste == null) {
-			throw new Exception("Esta ocorrencia não exite");
-		}
-
-		if (tecnicoEncontrado == null) {
-			throw new Exception("Infelizmente, não foi encontado nenhum tecnico, com esse email");
+		Tecnico tecnicoEncontrado = tecnicoService.obterTecnicoPeloId(userId);
+		
+		if(ocorrenciaExiste.getTecnico() != null) {
+			throw new Exception("Ocorrencia já direcionada a outro técnico");
 		}
 
 		ocorrenciaExiste.setTecnico(tecnicoEncontrado);
@@ -57,13 +65,13 @@ public class OcorrenciaService {
 	public Ocorrencia finalizarOcorrencia(Ocorrencia ocorrencia, Long id) throws Exception {
 		Ocorrencia ocorrenciaExiste = obterOcorrencia(id);
 
-		if (ocorrenciaExiste == null) {
-			throw new Exception("Esta ocorrencia não exite");
+		if(ocorrenciaExiste.getStatus() == OcurrencyStatus.CONCLUIDO) {
+			throw new Exception("Ocorrencia já finalizada");
 		}
-
+		
 		if (ocorrencia.getResolucao() != null && ocorrenciaExiste.getTecnico() != null) {
 			ocorrenciaExiste.setResolucao(ocorrencia.getResolucao());
-			ocorrenciaExiste.setStatus(OcurrencyStatus.CONLUIDO);
+			ocorrenciaExiste.setStatus(OcurrencyStatus.CONCLUIDO);
 		} else {
 			throw new Exception("Nenhum tecnico, ocupado com esta ocorrencia");
 		}
@@ -72,25 +80,16 @@ public class OcorrenciaService {
 		return novaOcorrencia;
 	}
 
-	public Ocorrencia criarOcorrencia(Ocorrencia ocorrencia, Long id) throws Exception {		
-//		Optional<Ocorrencia> ocorrenciaJaExise = ocorrenciaRepository.findAll().stream()
-//				.filter(x -> x.getDataCriacao().getMinute() == ocorrencia.getDataCriacao().getMinute()).findFirst();
-		
+	public Ocorrencia criarOcorrencia(Ocorrencia ocorrencia, Long userId) throws Exception {		
 		CategoriaOcorrencia categoriaEncontrada = categoriaOcorrenciaRepository
 				.findByNome(ocorrencia.getTipo_categoria());
-
-		System.out.println(categoriaEncontrada);
 		
 		if (categoriaEncontrada == null) {
-			throw new Exception("Não é possivel cadastrar uma ocorrencia sem sua categoria");
+			throw new EntityNotFoundException("Categoria não encontrada");
 		}
 
-//		if (!ocorrenciaJaExise.isEmpty()) {
-//			throw new Exception("Não é possivel, cadastrar mais de uma ocorrencia no mesmo minuto");
-//		}
-
 		List<Empresa> empresaEncontrada = empresaRepository.findAll();
-		GerenteOcorrencias gerenteOcorrenciasEcontrando = gerenteOcorrenciasRepository.findById(id).get();
+		GerenteOcorrencias gerenteOcorrenciasEcontrando = gerenteOcorrenciasRepository.findById(userId).get();
 
 		ocorrencia.setGerenteOcorrencias(gerenteOcorrenciasEcontrando);
 		ocorrencia.setCategoriaOcorrencia(categoriaEncontrada);
@@ -100,4 +99,17 @@ public class OcorrenciaService {
 		return ocorrenciaCriada;
 	}
 
+	public void removerCategoria(Claims token, Long id) throws NoPermissionException {
+		if(!JwtUtil.rolePermitida(token, Perfil.GERENTE.toString())) {
+			throw new NoPermissionException(errorNotPermission);
+		}
+		
+		Ocorrencia ocorrenciaJaExiste = ocorrenciaRepository.findById(id).orElse(null);
+		
+		if(ocorrenciaJaExiste == null) {
+			throw new EmptyResultDataAccessException("Ocorrencia já foi removida", 0, null);
+		}
+		
+		ocorrenciaRepository.delete(ocorrenciaJaExiste);;
+	}
 }

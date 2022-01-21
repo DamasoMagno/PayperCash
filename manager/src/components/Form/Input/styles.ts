@@ -1,35 +1,30 @@
-import styled, { css, keyframes } from "styled-components";
-
+import styled, { css } from "styled-components";
 
 export const Container = styled.div<{ notValid: boolean }>`
-  background: #232129;
+  background: var(--secondary-background);
   padding: 0.25rem 1rem;
   position: relative;
-  border: 1px solid #232129;
-  transition: border .2s;
-  ${({notValid}) => {
-    return notValid && css`
-      border: 1px solid red;;
-    `;
-  }}
-  border-radius: 0.4rem;
+  border-radius: .3rem;
   height: 3.75rem;
   display: flex;
   align-items: center;
+  border: 1px solid ${(props) => props.notValid ? "#FF0000" : "var(--primary-color)"};
+  transition: border 0.2s;
 
   & + div {
-    margin-top: 1.25rem;
+    margin-top: ${(props) => props.notValid ? "1.125rem" : ".85rem"};
   }
 
   svg {
-    margin-right: 0.1rem;
+    margin-right: .125rem;
   }
 
   input {
     background-color: transparent;
     font-size: 1rem;
-    color: #ffffff;
+    color: #333;
     flex: 1;
+    margin-left: .25rem;
     height: 100%;
     border: 0;
     outline: 0;
@@ -43,8 +38,11 @@ export const Container = styled.div<{ notValid: boolean }>`
   p {
     position: absolute;
     color: rgba(255, 0, 0, 1);
+    font-size: .85rem;
+    transform: translate(-5%, 100%);
     bottom: 0;
-    transform: translateY(100%);
     left: 0;
+    padding: 0 .25rem;
+    border-radius: .25rem;
   }
 `;
